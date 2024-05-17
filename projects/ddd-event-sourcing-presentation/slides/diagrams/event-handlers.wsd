@@ -1,0 +1,24 @@
+@startuml event-handlers
+
+title Gestionnaires d'événements
+
+class GestionnaireSqlPatient {
+  +void Handle(PatientAssignéAuLit evt)
+  +void Handle(PatientFacturé evt)
+  +void Handle(AssuranceMaladieMiseÀJour evt)
+}
+
+class GestionnaireNotificationCourriel {
+  +void Handle(PatientFacturé evt)
+  +void Handle(AssuranceMaladieExpirée evt)
+}
+
+class GestionnaireNotificationSms {
+  +void Handle(PatientEnDétresse evt)
+}
+
+class GestionnaireArchives {
+  +void Handle(PatientLibéré evt)
+}
+
+@enduml

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="406px" preserveAspectRatio="none" style="width:801px;height:406px;" version="1.1" viewBox="0 0 801 406" width="801px" zoomAndPan="magnify"><defs><filter height="300%" id="f1kzahy5ejsvz2" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="91" x="366.5" y="18.6855">4 contextes</text><!--cluster BC--><rect fill="#FFFFFF" filter="url(#f1kzahy5ejsvz2)" height="83" style="stroke: #000000; stroke-width: 1.5;" width="211" x="22" y="46.6406"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="170" x="42.5" y="63.1738">Contexte de Facturation</text><!--cluster MC--><rect fill="#FFFFFF" filter="url(#f1kzahy5ejsvz2)" height="83" style="stroke: #000000; stroke-width: 1.5;" width="316" x="191" y="312.6406"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="123" x="287.5" y="329.1738">Contexte Médical</text><!--cluster DC--><rect fill="#FFFFFF" filter="url(#f1kzahy5ejsvz2)" height="83" style="stroke: #000000; stroke-width: 1.5;" width="372" x="181" y="179.6406"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="180" x="277" y="196.1738">Contexte Démographique</text><!--cluster MAINC--><rect fill="#FFFFFF" filter="url(#f1kzahy5ejsvz2)" height="83" style="stroke: #000000; stroke-width: 1.5;" width="213" x="577" y="179.6406"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="159" x="604" y="196.1738">Contexte Maintenance</text><ellipse cx="76.1482" cy="98.0923" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="37.6482" ry="15.4517" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="49" x="51.6482" y="103.397">Facture</text><ellipse cx="183.1127" cy="98.0923" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="34.1127" ry="15.4517" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="44" x="161.1127" y="103.397">Patient</text><ellipse cx="388.1127" cy="364.0923" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="34.1127" ry="15.4517" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="44" x="366.1127" y="369.397">Patient</text><ellipse cx="473.8184" cy="364.2953" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="16.3184" ry="13.6547" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="15" x="466.3184" y="369.6">Lit</text><ellipse cx="263.033" cy="364.0923" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="56.033" ry="15.4517" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="75" x="225.533" y="369.397">Prescription</text><ellipse cx="388.1127" cy="231.0923" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="34.1127" ry="15.4517" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="44" x="366.1127" y="236.397">Patient</text><ellipse cx="496.7696" cy="231.0923" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="39.7696" ry="15.4517" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="52" x="470.7696" y="236.397">Adresse</text><ellipse cx="257.9828" cy="231.0923" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="60.9828" ry="15.4517" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="82" x="216.9828" y="236.397">NumeroIndex</text><ellipse cx="718.033" cy="231.0923" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="56.033" ry="15.4517" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="75" x="680.533" y="236.397">Équipement</text><ellipse cx="609.8184" cy="231.2953" fill="#FEFECE" filter="url(#f1kzahy5ejsvz2)" rx="16.3184" ry="13.6547" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="15" x="602.3184" y="236.6">Lit</text><!--link BP to Patient--><path d="M168.999,112.2766 C155.781,125.7226 136.852,147.9536 129,171.6406 C115.155,213.4056 100.5072,237.1126 129,270.6406 C189.658,342.0192 255.153,259.0836 337,304.6406 C355.837,315.1254 371.049,335.3558 379.81,349.0541 " fill="none" id="BP-Patient" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="50" x="130" y="236.6357">Similaire</text><!--link BP to DP--><path d="M209.606,107.8376 C241.834,119.1976 296.795,141.2736 337,171.6406 C353.773,184.3096 369.042,203.2616 378.412,216.1346 " fill="none" id="BP-DP" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="50" x="326" y="160.1357">Similaire</text><!--link DP to Patient--><path d="M388,246.6606 C388,271.8416 388,323.3296 388,348.5557 " fill="none" id="DP-Patient" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="50" x="389" y="293.1357">Similaire</text><!--link Patient to CDU--><path d="M422.266,364.1406 C432.247,364.1406 442.228,364.1406 452.209,364.1406 " fill="none" id="Patient-CDU" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="457.429,364.1406,448.429,360.1406,452.429,364.1406,448.429,368.1406,457.429,364.1406" style="stroke: #A80036; stroke-width: 1.0;"/><!--link MCP to Patient--><path d="M324.302,364.1406 C334.15,364.1406 343.997,364.1406 353.845,364.1406 " fill="none" id="MCP-Patient" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="319.152,364.1406,328.152,368.1406,324.152,364.1406,328.152,360.1406,319.152,364.1406" style="stroke: #A80036; stroke-width: 1.0;"/><!--link PI to BP--><path d="M118.847,98.1406 C128.848,98.1406 138.849,98.1406 148.851,98.1406 " fill="none" id="PI-BP" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="113.617,98.1406,122.617,102.1406,118.617,98.1406,122.617,94.1406,113.617,98.1406" style="stroke: #A80036; stroke-width: 1.0;"/><!--link DP to PA--><path d="M422.063,231.1406 C431.95,231.1406 441.838,231.1406 451.726,231.1406 " fill="none" id="DP-PA" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="456.897,231.1406,447.897,227.1406,451.897,231.1406,447.897,235.1406,456.897,231.1406" style="stroke: #A80036; stroke-width: 1.0;"/><!--link DCNI to DP--><path d="M324.338,231.1406 C334.18,231.1406 344.022,231.1406 353.864,231.1406 " fill="none" id="DCNI-DP" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="319.191,231.1406,328.191,235.1406,324.191,231.1406,328.191,227.1406,319.191,231.1406" style="stroke: #A80036; stroke-width: 1.0;"/><!--link MPB to CDU--><path d="M599.778,241.9866 C574.574,266.2646 509.669,328.7833 484.341,353.1801 " fill="none" id="MPB-CDU" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="50" x="559" y="293.1357">Similaire</text><!--
+@startuml bounded-contexts
+
+title 4 contextes
+
+
+rectangle "Contexte de Facturation" as BC {
+    (Facture) as PI
+    (Patient) as BP
+}
+
+rectangle "Contexte Médical" as MC {
+    (Patient)
+    (Lit) as CDU
+    (Prescription) as MCP
+}
+
+rectangle "Contexte Démographique" as DC {
+    (Patient) as DP
+    (Adresse) as PA
+    (NumeroIndex) as DCNI
+}
+
+rectangle "Contexte Maintenance" as MAINC {
+    (Équipement) as EQ
+    (Lit) as MPB
+}
+
+BP =[bold]= Patient: Similaire
+BP =[bold]= DP: Similaire
+DP =[bold]= Patient: Similaire
+Patient -right-> CDU
+Patient -left-> MCP
+BP -left-> PI
+DP -right-> PA
+DP -left-> DCNI
+MPB -down- CDU: Similaire
+
+@enduml
+
+PlantUML version 1.2019.03(Sun Mar 10 07:04:44 EDT 2019)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 1.8.0_181-b13
+Operating System: Windows 10
+OS Version: 10.0
+Default Encoding: Cp1252
+Language: en
+Country: CA
+--></g></svg>

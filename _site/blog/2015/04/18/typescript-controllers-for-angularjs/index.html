@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: TypeScript controller for AngularJS</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>TypeScript controller for AngularJS</h2>
+            <p class="date">Posted on 2015-04-18</p>
+            
+
+            <p>AngularJS 1.3 doesn’t have native support for TypeScript like <a href="http://blogs.msdn.com/b/typescript/archive/2015/03/05/angular-2-0-built-on-typescript.aspx">AngularJS 2.0 will have</a>.
+Here’s a decent way to write them for 1.3.</p>
+
+<!-- more -->
+
+<p>We want to use the full power of TypeScript for classes, properties and methods. Here’s a basic controller and directive.</p>
+
+<script src="https://gist.github.com/cdroulers/3d9606869f10803757dc.js"></script>
+
+<script src="https://gist.github.com/cdroulers/813fcaf03df177db5420.js"></script>
+
+<p>As we can see, the controller is a normal TypeScript class. It also <code class="highlighter-rouge">extends</code> another class that has base functionality (yay code re-use!). We can
+declare normal TypeScript properties which can be used in the view as if they were normal fields.</p>
+
+<p>Notice the <code class="highlighter-rouge">public static $inject</code> member of the class. This is for AngularJS’ injector service!</p>
+
+<p>At the end of the file, we register the controller and directive. The catch is here! Adding <code class="highlighter-rouge">controllerAs</code> and <code class="highlighter-rouge">bindToController</code> does most of the magic.</p>
+
+<p>These options tell AngularJS to add a <code class="highlighter-rouge">ctrl</code> member to the <code class="highlighter-rouge">$scope</code> which is the instance of the controller it will create. <code class="highlighter-rouge">bindToController</code> then tells
+AngularJS to bind the scope variable (the attributes on our directive) to the controller instead of on <code class="highlighter-rouge">$scope</code>.</p>
+
+<p>This means that the <code class="highlighter-rouge">SomeModel</code> member of the controller will be filled by whatever is passed into the <code class="highlighter-rouge">model</code> attribute on the directive declaration.</p>
+
+<p>In the view, we have to prefix everything with <code class="highlighter-rouge">ctrl</code>, but that’s a tiny price to pay for easier, cleaner controllers. No more huge functions declaring more
+functions and so on. This also gives better refactoring power and type safety since it’s a class with clear members and functions.</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/04/18/typescript-controllers-for-angularjs/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/04/18/typescript-controllers-for-angularjs/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

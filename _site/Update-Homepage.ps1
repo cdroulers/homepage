@@ -1,0 +1,1 @@
+ssh -l cdroulers@cdroulers.com -o PreferredAuthentications=keyboard-interactive,password -o PubkeyAuthentication=no cdroulers.com "./update_homepage.sh && exit"

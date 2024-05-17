@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">	
+	<title type="text" xml:lang="en">Christian Droulers :: Blog</title>
+	<link type="application/atom+xml" href="https://cdroulers.com/blog/feed.xml" rel="self"/>
+ 	<link type="text" href="https://cdroulers.com/" rel="alternate"/>
+	<updated>2019-05-08T21:05:52-04:00</updated>
+	<id>http://cdroulers.com/blog/feed.xml</id>
+	<author>
+		<name>Christian Droulers</name>
+	</author>
+	
+	<entry>
+		<title>HTTPS everywhere!</title>
+		<link href="http://cdroulers.com/blog/2017/02/08/https-everywhere/"/>
+		<updated>2017-02-08T00:00:00-05:00</updated>
+		<id>http://cdroulers.com/blog/2017/02/08/https-everywhere/</id>
+		<content type="html">&lt;p&gt;What’s this!? Your trafic to this site is now encrypted!&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;No one can know your dirty secrets except me!&lt;/p&gt;
+
+&lt;p&gt;Because of &lt;a href=&quot;https://letsencrypt.org/&quot;&gt;Let’s Encrypt&lt;/a&gt; and &lt;a href=&quot;http://apisnetworks.com/r?cdroulers&quot;&gt;Hostineer&lt;/a&gt;,
+I now have a fully secure HTTPS website! And it was super easy.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://letsencrypt.org/about/&quot;&gt;Let’s Encrypt&lt;/a&gt; is a recently created Open Certificate Authority
+that allows any individual to create and install SSL/TLS certificates on their websites. The certificates
+are valid for 90 days and there is even &lt;a href=&quot;https://certbot.eff.org/&quot;&gt;a tool (CertBot)&lt;/a&gt; that can automate renewal
+regularly. Therfore, there is now no reason NOT to serve your website over HTTPS!&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://apisnetworks.com/r?cdroulers&quot;&gt;Hostineer&lt;/a&gt; is my host since 2008 and has been great. It’s not very
+expensive, it has a lot of features (SSH access, sub-domains, etc.) with the basic package and the service
+is fast. The infrastructure is regularly updated as well. They also have a feature to enable SSL via
+Let’s Encrypt automatically via a GUI instead of manually setting up CertBot. Easy and efficient.&lt;/p&gt;
+
+&lt;p&gt;That means that &lt;a href=&quot;https://apps.cdroulers.com/block-fly&quot;&gt;Block Fly&lt;/a&gt; will soon be fully offline with
+service workers since they require HTTPS. Yayyyyyyy!&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>NUnit data-driven unit tests</title>
+		<link href="http://cdroulers.com/blog/2015/09/21/nunit-data-driven-unit-tests/"/>
+		<updated>2015-09-21T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/09/21/nunit-data-driven-unit-tests/</id>
+		<content type="html">&lt;p&gt;Writing unit tests is fun. But sometimes, getting proper test data gets cumbersome.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;Most examples of unit testing deal with a really small problem that has very few input and even less output. This
+is great for learning, obviously, but when you get in a real-world problem, it’s never that simple.&lt;/p&gt;
+
+&lt;p&gt;We had to write unit tests for a rule engine that had about 15 input variables and between 5 and 10 output
+depending on the input. This test data also comes from the client because it’s about business rules and porting
+older code and manual calculations to a new system. How do we get the data from the client’s head into our code
+so we can run it through the algorithm?&lt;/p&gt;
+
+&lt;h3 id=&quot;excel-to-the-rescue&quot;&gt;Excel to the rescue&lt;/h3&gt;
+
+&lt;p&gt;Excel is always an obvious choice for &lt;em&gt;everything&lt;/em&gt;. Everyone knows how to use it and has it installed. It’s pretty
+and you can easily build and manage data. So you create a file with headers and a few rows of data then you commit.
+Now your repo has a nice binary file that you can’t diff online (neither bitbucket or github supports it as of
+writing this post) or offline, except with special tools. And the special tools aren’t top-notch yet. Excel is out.&lt;/p&gt;
+
+&lt;h3 id=&quot;csv-to-the-rescue&quot;&gt;CSV to the rescue&lt;/h3&gt;
+
+&lt;p&gt;CSV is something that Excel still can’t figure out properly. If you’re lucky enough that everyone that’s going to
+touch the file runs their OS in the same locale. Otherwise, you’ll get people opening the file with the &lt;code class=&quot;highlighter-rouge&quot;&gt;fr-CA&lt;/code&gt;
+locale that won’t use &lt;code class=&quot;highlighter-rouge&quot;&gt;,&lt;/code&gt; as their CSV separator and Excel will happily display everything in one column. Using the
+&lt;code class=&quot;highlighter-rouge&quot;&gt;sep=,&lt;/code&gt; works if everyone uses Excel but LibreOffice doesn’t support it and you get weird data.&lt;/p&gt;
+
+&lt;h3 id=&quot;tsv-the-final-solution&quot;&gt;TSV the final solution&lt;/h3&gt;
+
+&lt;p&gt;The best option we’ve come up with is using a &lt;code class=&quot;highlighter-rouge&quot;&gt;.tsv&lt;/code&gt; file. Which isn’t a real file format, it’s simply a tab-separated
+CSV using the &lt;code class=&quot;highlighter-rouge&quot;&gt;.tsv&lt;/code&gt; extension. It has a few drawbacks that were very acceptable to us.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It doesn’t have a default program, so you have to start it with the &lt;code class=&quot;highlighter-rouge&quot;&gt;open with&lt;/code&gt; dialog or double-click it and let
+Windows handle it.&lt;/li&gt;
+  &lt;li&gt;You can’t save formulas or formatting in the file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;But opening it with Excel will work no matter the locale and LibreOffice opens up a parsing dialog with &lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;Tab&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt; as
+the delimiter pre-selected.&lt;/p&gt;
+
+&lt;p&gt;It &lt;a href=&quot;https://github.com/cdroulers/nunit-data-driven-tests/commit/cb5334be9d3177d84d293c6f0dc70a0ec8d43c92&quot;&gt;diffs properly with any tool and online&lt;/a&gt;.
+&lt;a href=&quot;https://github.com/cdroulers/nunit-data-driven-tests/blob/master/Cdroulers.Business.Tests.Unit/Data/prime-factors.tsv&quot;&gt;GitHub even shows the TSV file in a neat HTML table!&lt;/a&gt;
+In our use-case it was easy for our Product Owner to open up our sample
+file and fill it up with dozens of test cases. Edge cases, large numbers, etc. When we found bugs, we would simply add
+a new line in the file. We added a new feature and simply added a new column in the TSV file. All of that shows up
+properly in a diff so it’s easy to see the data that was added along with a bug fix or a new feature.&lt;/p&gt;
+
+&lt;h3 id=&quot;reading-the-tsv-file&quot;&gt;Reading the TSV file&lt;/h3&gt;
+
+&lt;p&gt;NUnit is a pretty great framework. It has great stuff like &lt;code class=&quot;highlighter-rouge&quot;&gt;[TestCase()]&lt;/code&gt; attributes for quickly testing the same code
+with different input and output. It also has &lt;code class=&quot;highlighter-rouge&quot;&gt;[TestCaseSource()]&lt;/code&gt; which is exactly what we need for running tests
+according to our TSV file.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[TestCaseSource(&quot;FunctionName&quot;)]&lt;/code&gt; will, at test discovery time, execute the static method in the parameters and
+create a test for each value. The function signature must 
+&lt;a href=&quot;https://github.com/cdroulers/nunit-data-driven-tests/blob/master/Cdroulers.Business.Tests.Unit/GivenPrimeFactorCalculator.cs#L46&quot;&gt;look like the following&lt;/a&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IEnumerable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;FunctionName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Enumerable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/cdroulers/nunit-data-driven-tests/blob/master/Cdroulers.Business.Tests.Unit/GivenPrimeFactorCalculator.cs#L39&quot;&gt;The full test method using this looks like&lt;/a&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;na&quot;&gt;[TestCaseSource(&quot;FunctionName&quot;)]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;TestName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Do something with value
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;Assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;That&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Is&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;EqualTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Assert whatever you want.
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The static method’s return type must be IEnumerable, but the contents can be any class. Therefore in our case, I created
+a simple class that contained each input and output as properties and read them from the TSV.&lt;/p&gt;
+
+&lt;p&gt;I created &lt;a href=&quot;https://github.com/cdroulers/nunit-data-driven-tests&quot;&gt;a full-blown sample&lt;/a&gt; with Visual Studio 2013 available
+for free! Each commit represents a step towards the end goal with a simple domain of calculating prime factors.&lt;/p&gt;
+
+&lt;p&gt;In that sample, reading the TSV is done using very simple string parsing, which is a pretty bad idea in general,
+especially with a larger sample size than 2 columns like my sample. Using a proper CSV parsing library such as
+&lt;a href=&quot;https://github.com/JoshClose/CsvHelper&quot;&gt;CsvHelper&lt;/a&gt; is a much better idea. But that’s another blog post!&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>DataContractSerializer, MailAddress and Value Types</title>
+		<link href="http://cdroulers.com/blog/2015/05/29/datacontractserializer-mailaddress-value-types/"/>
+		<updated>2015-05-29T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/05/29/datacontractserializer-mailaddress-value-types/</id>
+		<content type="html">&lt;p&gt;In our quest to be fast, we opted to stick a bunch of data inside an XML field in SQL Server with NHibernate.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;The feature doesn’t have a lot of validation or business logic, so we opted to create a few columns for queryable data and an XML field for the rest. Our
+domain object looked just as it would with a full SQL schema, but we told &lt;a href=&quot;http://nhibernate.info/&quot;&gt;NHibernate&lt;/a&gt; to serialize the object to XML when saving it.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-mapping&quot;&gt;The mapping&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;    &lt;span class=&quot;nf&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CustomType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;XmlType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AnObjectWeWantedInXml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;gt;();&lt;/span&gt; &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;the-xmltype&quot;&gt;The XmlType&lt;/h3&gt;
+
+&lt;p&gt;It’s available &lt;a href=&quot;https://gist.github.com/cdroulers/6724d31b65f4060aaa6a&quot;&gt;on github&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;reasoning&quot;&gt;Reasoning&lt;/h3&gt;
+
+&lt;p&gt;We’re still not sure what the client needs for this interface to be complete, and it’s also prone to changing because of business processes and products.&lt;/p&gt;
+
+&lt;p&gt;This is why we opted for an XML field. It means we can easily add new properties to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Data&lt;/code&gt; object and it will get serialized automatically. Using
+&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms731072(v=vs.110).aspx&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;DataContractSerializer&lt;/code&gt;&lt;/a&gt; means we can easily get backwards compatibility because we can set
+default values.&lt;/p&gt;
+
+&lt;h3 id=&quot;mailaddress-and-value-types&quot;&gt;MailAddress and Value Types&lt;/h3&gt;
+
+&lt;p&gt;We had a &lt;code class=&quot;highlighter-rouge&quot;&gt;MailAddress&lt;/code&gt; property somwhere in that data and it just wouldn’t serialize. That was a bummer at first because we like using semantic value types. We
+also had a few other types that had no default constructors that would fail to serialize. After looking into it, I found a decent solution: 
+&lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms733064(v=vs.110).aspx&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;IDataContractSurrogate&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;IDataContractSurrogate&lt;/code&gt; let’s you define code that will transform the objects during serialization and deserialization. This means that when we encounter a &lt;code class=&quot;highlighter-rouge&quot;&gt;MailAddress&lt;/code&gt;,
+we can return a surrogate class that is serializable. Then, when reading the data, we do the opposite operation.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;XmlDataContractSurrogate&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IDataContractSurrogate&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetDataContractType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MailAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;XmlMailAddressSurrogate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;XmlMoneySurrogate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetObjectToSerialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MailAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;XmlMailAddressSurrogate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;XmlMailAddressSurrogate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;Address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;DisplayName&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DisplayName&lt;/span&gt; 
+            &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Money&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;XmlMoneySurrogate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;XmlMoneySurrogate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetDeserializedObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;XmlMailAddressSurrogate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MailAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MailAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DisplayName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;money&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;XmlMoneySurrogate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;money&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IsGenericType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetGenericTypeDefinition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ICollection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;||&lt;/span&gt; 
+            &lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetGenericTypeDefinition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;)))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elementType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;targetType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetGenericArguments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+            &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;listType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&amp;gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;MakeGenericType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;elementType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Activator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;CreateInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;listType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+            &lt;span class=&quot;k&quot;&gt;foreach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetCustomDataToExport&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MemberInfo&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memberInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dataContractType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetCustomDataToExport&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;clrType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dataContractType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetKnownCustomDataTypes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Collection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;customDataTypes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;GetReferencedTypeOnImport&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typeName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typeNamespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;customData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;GetType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;typeNamespace&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;.&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typeName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CodeTypeDeclaration&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ProcessImportedType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;CodeTypeDeclaration&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typeDeclaration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+        &lt;span class=&quot;n&quot;&gt;CodeCompileUnit&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;compileUnit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typeDeclaration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The code for &lt;code class=&quot;highlighter-rouge&quot;&gt;Array&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;GetDeserializedObject&lt;/code&gt; is because we used &lt;code class=&quot;highlighter-rouge&quot;&gt;ICollection&amp;lt;T&amp;gt;&lt;/code&gt; in our data object, which would be deserialized in a &lt;code class=&quot;highlighter-rouge&quot;&gt;T[]&lt;/code&gt;. This caused problems
+later on with &lt;a href=&quot;http://automapper.org/&quot;&gt;AutoMapper&lt;/a&gt; because it tried to &lt;code class=&quot;highlighter-rouge&quot;&gt;Clear()&lt;/code&gt; the collection, which was read-only. It also makes more sense to put an actual
+collection inside an &lt;code class=&quot;highlighter-rouge&quot;&gt;ICollection&amp;lt;T&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The actual &lt;code class=&quot;highlighter-rouge&quot;&gt;XmlMailAddressSurrogate&lt;/code&gt; is a very simple POCO object:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-csharp&quot; data-lang=&quot;csharp&quot;&gt;&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;XmlMailAddressSurrogate&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DisplayName&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;With all this, we can develop our REST api faster while keeping a modicum of structure in our data. SQL Server’s XML field is fully queryable. If we need to extract some data
+from the XML into new columns, we can do that with a normal &lt;code class=&quot;highlighter-rouge&quot;&gt;UPDATE&lt;/code&gt; statement.&lt;/p&gt;
+
+&lt;p&gt;SQL Server Management Studio also makes it easy to inspect and modify the XML data.&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>Another book I reviewed is available</title>
+		<link href="http://cdroulers.com/blog/2015/05/11/another-book-review/"/>
+		<updated>2015-05-11T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/05/11/another-book-review/</id>
+		<content type="html">&lt;p&gt;This winter, I reviewed &lt;a href=&quot;https://www.packtpub.com/application-development/knockoutjs-essentials&quot;&gt;an introductory book on KnockouJS&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;I didn’t learn as much as I did with the &lt;a href=&quot;/blog/2014/12/29/powershell-troubleshooting-guide-credits/&quot;&gt;PowerShell book&lt;/a&gt; last time,
+but it was a good experience nonetheless. Goes from zero to small application in &lt;a href=&quot;http://knockoutjs.com/&quot;&gt;KnockouJS&lt;/a&gt; in a shot period of time.&lt;/p&gt;
+
+&lt;figure&gt;
+    &lt;img src=&quot;/assets/images/knockoutjs-essentials.jpg&quot; alt=&quot;The book cover&quot; /&gt;
+    &lt;figcaption&gt;Flowers!&lt;/figcaption&gt;
+&lt;/figure&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>.NET code coverage with OpenCover and Bamboo</title>
+		<link href="http://cdroulers.com/blog/2015/05/06/net-code-coverage-with-opencover-and-bamboo/"/>
+		<updated>2015-05-06T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/05/06/net-code-coverage-with-opencover-and-bamboo/</id>
+		<content type="html">&lt;p&gt;Code coverage is a neat metric to have on a project. It can give you a rough idea of how robust your code is.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;Starting a brand new projects has a lot of perks. One of those is a green field for starting testing the proper way. Testing is hard, obviously.
+With a new project, you can apply TDD as much as possible. You can use the 
+&lt;a href=&quot;/blog/2015/04/29/data-driven-testing-and-excel-hate/&quot;&gt;right tools for the job&lt;/a&gt;. You can make sure that the team stays on track.&lt;/p&gt;
+
+&lt;p&gt;You want to make sure that everyone agrees on the way to go and understands why. Everyone is on board with testing on the project, and it’s great to see unit, integration and
+systems tests (NUnit and Selenium, blog post to come) come along a pull request. But what’s a good way to &lt;strong&gt;measure&lt;/strong&gt; test quality? It’s 
+&lt;a href=&quot;https://stackoverflow.com/questions/262727/how-do-you-measure-the-quality-of-your-unit-tests&quot;&gt;not an easy question to answer&lt;/a&gt;. I think the more data we can have, the better.&lt;/p&gt;
+
+&lt;p&gt;So I set out to integrate a code coverage tool into our automated build so we could have a decent trend over time of our coverage. It’s obviously not the only thing we will
+use to determine quality, but it’s a data point!&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/276829/code-coverage-for-c-net&quot;&gt;There are a lot of tools&lt;/a&gt; for getting code coverage. I usually try the open-source approach first
+because that’s just the way I like things! &lt;a href=&quot;https://github.com/OpenCover/opencover&quot;&gt;OpenCover&lt;/a&gt; was basically the only free one that is actively maintained. It seemed
+to have a lot of features, an active community, good tutorials and integration with a lot of tools.&lt;/p&gt;
+
+&lt;p&gt;I modified the unit tests step in our &lt;a href=&quot;https://github.com/fsharp/FAKE&quot;&gt;FAKE&lt;/a&gt; build to run the tests through OpenCover so coverage could be gathered while the tests run
+normally as part of the build process.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/cdroulers/530d4ef4e0ee07c98a1e.js&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;There really wasn’t that much magic to it. OpenCover watches every DLL loaded while the &lt;code class=&quot;highlighter-rouge&quot;&gt;nunit-console.exe&lt;/code&gt; runs the tests and uses the filter to know if it should record
+coverage for that file.&lt;/p&gt;
+
+&lt;p&gt;OpenCover on its own simply generates an XML report that isn’t very user friendly. But using &lt;a href=&quot;https://github.com/danielpalme/ReportGenerator&quot;&gt;ReportGenerator&lt;/a&gt; allows us
+to generate a great HTML report with percentage for each assembly, namespace, class, etc. We can even open each file and see which lines are not covered as well as
+which branches are not covered. In the latest version, it’s even possible to get a history / trend of coverage between each report. I have not looking into it yet.&lt;/p&gt;
+
+&lt;p&gt;Last step is generating &lt;a href=&quot;https://www.ncover.com/&quot;&gt;NCover&lt;/a&gt; output from the OpenCover XML file so we can tell &lt;a href=&quot;https://www.atlassian.com/software/bamboo&quot;&gt;Bamboo&lt;/a&gt; to read it. 
+The &lt;code class=&quot;highlighter-rouge&quot;&gt;XSL&lt;/code&gt; file is available in the &lt;a href=&quot;https://github.com/OpenCover/opencover/wiki/Monitoring-coverage-in-Atlassian-Bamboo&quot;&gt;OpenCover wiki&lt;/a&gt;. For Bamboo, we simply need to
+open the build plan configuration, click on the job we run the OpenCover code in and select the “Miscellaneous” tab. There’s an option for NCover, we simply write down
+the path of the folder where we generated the NCover output. The NCover file &lt;strong&gt;has&lt;/strong&gt; to be in a directory.&lt;/p&gt;
+
+&lt;figure&gt;
+    &lt;img src=&quot;/assets/images/open-cover-summary.jpg&quot; alt=&quot;NCover Bamboo output&quot; /&gt;
+    &lt;figcaption&gt;Look at that dot!&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;It’s possible to have multiple files in the directory, Bamboo will then create an average between all the files. The ReportGenerator output is also added as an Artifact
+of the build, so we can look at it and keep it in the build history. The Bamboo graph is fairly basic, but it’s enough to get a glance and dig in the artifact if
+necessary.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;XSL&lt;/code&gt; transform takes the line coverage data points from OpenCover’s output. It trivial to change it to use branch points. Simply replace &lt;code class=&quot;highlighter-rouge&quot;&gt;SequencePoints/SequencePoint&lt;/code&gt;
+to &lt;code class=&quot;highlighter-rouge&quot;&gt;BranchPoints/BranchPoint&lt;/code&gt; in the &lt;code class=&quot;highlighter-rouge&quot;&gt;XSL&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;p&gt;So far the only small problem I’ve found is that the output Bamboo parses doesn’t have the same percentage as the OpenCover results. I’m guessing the &lt;code class=&quot;highlighter-rouge&quot;&gt;XSL&lt;/code&gt; loses a bit
+of data. I’ll look into it eventually.&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>Data driven testing and Excel hate</title>
+		<link href="http://cdroulers.com/blog/2015/04/29/data-driven-testing-and-excel-hate/"/>
+		<updated>2015-04-29T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/04/29/data-driven-testing-and-excel-hate/</id>
+		<content type="html">&lt;p&gt;Testing business rules that have a lot of input, output and permutations is not a fun job. Getting the data in a decent, readable, diffable format is hard as well.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;We have a business rule calculation that takes a lot of parameters in and has a few out as well. There’s a lot of permutations possible too. The data we need for these
+tests comes from a few sources: an older system, manual testing and product owner knowledge.&lt;/p&gt;
+
+&lt;p&gt;Hand-coding all these values in &lt;code class=&quot;highlighter-rouge&quot;&gt;[TestCase]&lt;/code&gt; attributes was starting to get a little heavy and non-manageable anytime a new parameter needed to be added. At first, we
+opted for an Excel Spreadsheet read with &lt;a href=&quot;https://www.nuget.org/packages/ExcelDataReader/&quot;&gt;ExcelDataReader&lt;/a&gt;. XLSX is a zip format with XML inside it. So in git, we had no idea
+what was happening anytime someone changed things. Merges were impossible (even with Beyond Compare, it was far from usable).&lt;/p&gt;
+
+&lt;p&gt;Today, I looked for a text-based format that would be usable by all developers, architects, product owners and etc. Seems like 
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Comma-separated_values&quot;&gt;CSV&lt;/a&gt; is still horribly broken in Excel, even in 2015.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Delimiter is set according to Windows’ locale settings;&lt;/li&gt;
+  &lt;li&gt;No way to override it in both read and write;&lt;/li&gt;
+  &lt;li&gt;Encoding support doesn’t work well.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Exporting our xlsx to csv just wouldn’t work at all. If I exported with commas, it wouldn’t read it. If I exported with semi-colons, it would read it, but not as UTF-8. If
+I added the BOM, it would start ignoring semi-colons altogether. LibreOffice works perfectly with CSVs. When you open one, it pops a small window of settings with educated
+guesses. Encoding, separator and a preview. MAGIC!&lt;/p&gt;
+
+&lt;p&gt;The final format we settled on is “TSV”, which isn’t really a thing, but works well in LibreOffice, Excel and plain text. It’s simply tab-separated values. I used LibreOffice
+to export the XLSX’s sheets as CSV, then put a tab as the separator. The result opens just fine in LibreOffice (obviously!) and opens ok in Excel. Any character in the UTF-8
+range (mostly French accented characters in headers) show up as separate characters (two bytes each), but as long as we don’t touch those in Excel, everything is fine.&lt;/p&gt;
+
+&lt;p&gt;TSV is easy to read and diff. It will also be possible to easily send it to a product owner for new test cases and then merge it back in since it’s text!&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/cdroulers/1a919d7f9ce701a716b0.js&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;You can’t see the tabs visually, but any proper text editor can show them.&lt;/p&gt;
+
+&lt;p&gt;Once that is done, I simply use &lt;a href=&quot;https://github.com/JoshClose/CsvHelper&quot;&gt;CsvHelper&lt;/a&gt; to read it in with header support. See 
+&lt;a href=&quot;https://github.com/JoshClose/CsvHelper/wiki/Fluent-Class-Mapping&quot;&gt;Fluent class mapping&lt;/a&gt; for a good sample.&lt;/p&gt;
+
+&lt;p&gt;With this data read, we can generate an NUnit &lt;code class=&quot;highlighter-rouge&quot;&gt;[TestCaseSource]&lt;/code&gt; and have a single test method that goes through ALL of the data in the file.&lt;/p&gt;
+
+&lt;p&gt;Whenever you find a bug or a new case arises, simply modify the test data file (TSV) and the test should start running in your suite.&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>Testing AngularJS controllers</title>
+		<link href="http://cdroulers.com/blog/2015/04/26/testing-angularjs-controllers/"/>
+		<updated>2015-04-26T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/04/26/testing-angularjs-controllers/</id>
+		<content type="html">&lt;p&gt;So I just blogged about &lt;a href=&quot;/blog/2015/04/18/typescript-controllers-for-angularjs/&quot;&gt;writing controllers in TypeScript&lt;/a&gt;. Here’s how to write tests
+for them now.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;We recently refactored &lt;strong&gt;all&lt;/strong&gt; our controllers to become classes and also (quite importantly) not use &lt;code class=&quot;highlighter-rouge&quot;&gt;$scope.$watch&lt;/code&gt; anymore. We went this way after experiencing
+problems with &lt;code class=&quot;highlighter-rouge&quot;&gt;$watch&lt;/code&gt; itself and testability. &lt;a href=&quot;http://www.benlesh.com/2013/10/title.html&quot;&gt;This blog article&lt;/a&gt; outlines good reasons not to do it.&lt;/p&gt;
+
+&lt;p&gt;Our general guideline is to now use JavaScript properties when we want to have a value changing affect another in the same model or a child model. We also use
+events when crossing model or controller borders.&lt;/p&gt;
+
+&lt;p&gt;With that in mind, anything that can be made to happen in a model is a straight forward test. Then, most things that can happen in a controller become easy to
+test as well! There should be a very limited set of actions that a controller can do. It can &lt;code class=&quot;highlighter-rouge&quot;&gt;$emit&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;$broadcast&lt;/code&gt; events, it can call AJAX (via a service
+ideally) and it can respond to events.&lt;/p&gt;
+
+&lt;p&gt;Here’s a simple sample test class for a controller.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;describe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;app.controllers.YourController&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controllers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;YourController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;serviceMock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IRootScopeService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IQService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;beforeEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;app&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;beforeEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IRootScopeService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+                &lt;span class=&quot;na&quot;&gt;$q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IQService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+                &lt;span class=&quot;na&quot;&gt;$injector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IInjector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;rootScope&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+            &lt;span class=&quot;nx&quot;&gt;serviceMock&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;jasmine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createSpyObj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;app.services.Service&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;GetAll&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;jasmine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Spy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;serviceMock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;GetAll&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;and&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;returnValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;thing&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+
+            &lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controllers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;YourController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;serviceMock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;$injector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;otherDependency&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;should load all things&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Things&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;not&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toBeNull&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Things&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$digest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Things&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;describe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;MyFunction&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;should return true by default&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MyFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+        &lt;span class=&quot;nx&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;should return false when other thing is changed is false&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;OtherThing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;controller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MyFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This is a very cut down example, but it demonstrates a few things. First, mocking a service is quite easy with Jasmine. Then, using &lt;code class=&quot;highlighter-rouge&quot;&gt;$injector&lt;/code&gt; to get
+other dependencies you don’t need for testing if you’re too lazy to mock them (I know I was!).&lt;/p&gt;
+
+&lt;p&gt;Looking back, passing null into dependencies that aren’t used in the tests would be much easier… I’ll see about that later!&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>TypeScript properties and JSON.stringify</title>
+		<link href="http://cdroulers.com/blog/2015/04/22/typescript-properties-and-json-stringify/"/>
+		<updated>2015-04-22T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/04/22/typescript-properties-and-json-stringify/</id>
+		<content type="html">&lt;p&gt;TypeScript supports &lt;a href=&quot;http://www.ecma-international.org/ecma-262/5.1/#sec-15.2.3.6&quot;&gt;ECMA 5.1’s properties&lt;/a&gt;
+&lt;a href=&quot;http://www.typescriptlang.org/Handbook#classes-accessors&quot;&gt;quite well&lt;/a&gt; but it seems it doesn’t play well with &lt;code class=&quot;highlighter-rouge&quot;&gt;JSON.stringify()&lt;/code&gt;&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;This entire blog post talks about how I ended up mapping JSON from our REST API into our project’s TypeScript classes. The first problem when doing that
+was that we wanted classes in our code with all the functions and helpers and static properties and whatnot. So we defined them as classes with TypeScript.&lt;/p&gt;
+
+&lt;p&gt;But when the JSON came back, it contained properties that had the same name as some functions, so the function would be overriden by any basic mapping code.&lt;/p&gt;
+
+&lt;p&gt;So I set out to create a base class that was more mapping aware.&lt;/p&gt;
+
+&lt;p&gt;The result is here: &lt;a href=&quot;https://gist.github.com/cdroulers/479c966506c92ed1fac0&quot;&gt;https://gist.github.com/cdroulers/479c966506c92ed1fac0&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The mapping magic happens in the constructor. The &lt;code class=&quot;highlighter-rouge&quot;&gt;data&lt;/code&gt; parameter is the JSON (or undefined when not mapping). It iterates through every property of the data, 
+automatically ignoring functions of the class. Then, there are three options:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;If the property found has a mapping function in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_mapOptions&lt;/code&gt; object, it calls that function to map the sub-entity. So if you have a tree of classes, they can
+  easily be mapped&lt;/li&gt;
+  &lt;li&gt;If the property found has a mapping name in the &lt;code class=&quot;highlighter-rouge&quot;&gt;PropertyNames&lt;/code&gt;, then the property is set on the object as the mapped property name.&lt;/li&gt;
+  &lt;li&gt;If the property is not explicitely ignored, then it is simply mapped on the object.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Option 2 is where the magic happens for Properties. Say you have a property like this one:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kr&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;_name&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kr&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Accessed Name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kr&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;You done messed up!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;When the JSON comes back from an API call with the &lt;code class=&quot;highlighter-rouge&quot;&gt;Name&lt;/code&gt; property set to “Roger”, you don’t necessarily want it to go through the setter. So in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_mapOptions&lt;/code&gt;,
+you pass the following:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;PropertyNames&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;_name&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then, the JSON maps to private fields and no accessors are used and we have clean and pretty properties on our classes.&lt;/p&gt;
+
+&lt;p&gt;Then when I wanted to serialize the class back into JSON, the properties did NOT show up! I was very confused. So I looked into how TypeScript generates the property
+and found it it defines it on the prototype of the class instead of on the object. The behaviour can be seen in 
+&lt;a href=&quot;http://plnkr.co/edit/NXUo7zjJZaUuyv54TD9i?p=preview&quot;&gt;this plunkr&lt;/a&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;Class1&lt;/code&gt; is what TypeScript would generate for our class higher up the post. &lt;code class=&quot;highlighter-rouge&quot;&gt;JSON.stringify&lt;/code&gt; doesn’t
+serialise properties defined on the prototype and I was a bit annoyed.&lt;/p&gt;
+
+&lt;p&gt;I &lt;a href=&quot;http://stackoverflow.com/questions/29705211/object-defineproperty-on-a-prototype-prevents-json-stringify-from-serializing-it&quot;&gt;asked the question on Stack Overflow&lt;/a&gt;
+and got responses basically indicating that it was standard behaviour and a few workarounds. I set out to work around it using the &lt;code class=&quot;highlighter-rouge&quot;&gt;toJSON&lt;/code&gt; function. Since I keep the
+&lt;code class=&quot;highlighter-rouge&quot;&gt;_mapOptions&lt;/code&gt; as a private member, I used those to reverse map property names and ignore certain properties. &lt;code class=&quot;highlighter-rouge&quot;&gt;toJSON&lt;/code&gt; is automatically called by &lt;code class=&quot;highlighter-rouge&quot;&gt;JSON.stringify&lt;/code&gt; so
+any framework that uses that to serialise your classes (AngularJS does!) will get a proper object to serialise.&lt;/p&gt;
+
+&lt;p&gt;This is the best way I found to handle mapping to and from JSON with TypeScript. Any other suggestions?&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>TypeScript controller for AngularJS</title>
+		<link href="http://cdroulers.com/blog/2015/04/18/typescript-controllers-for-angularjs/"/>
+		<updated>2015-04-18T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/04/18/typescript-controllers-for-angularjs/</id>
+		<content type="html">&lt;p&gt;AngularJS 1.3 doesn’t have native support for TypeScript like &lt;a href=&quot;http://blogs.msdn.com/b/typescript/archive/2015/03/05/angular-2-0-built-on-typescript.aspx&quot;&gt;AngularJS 2.0 will have&lt;/a&gt;.
+Here’s a decent way to write them for 1.3.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;We want to use the full power of TypeScript for classes, properties and methods. Here’s a basic controller and directive.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/cdroulers/3d9606869f10803757dc.js&quot;&gt;&lt;/script&gt;
+
+&lt;script src=&quot;https://gist.github.com/cdroulers/813fcaf03df177db5420.js&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;As we can see, the controller is a normal TypeScript class. It also &lt;code class=&quot;highlighter-rouge&quot;&gt;extends&lt;/code&gt; another class that has base functionality (yay code re-use!). We can
+declare normal TypeScript properties which can be used in the view as if they were normal fields.&lt;/p&gt;
+
+&lt;p&gt;Notice the &lt;code class=&quot;highlighter-rouge&quot;&gt;public static $inject&lt;/code&gt; member of the class. This is for AngularJS’ injector service!&lt;/p&gt;
+
+&lt;p&gt;At the end of the file, we register the controller and directive. The catch is here! Adding &lt;code class=&quot;highlighter-rouge&quot;&gt;controllerAs&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;bindToController&lt;/code&gt; does most of the magic.&lt;/p&gt;
+
+&lt;p&gt;These options tell AngularJS to add a &lt;code class=&quot;highlighter-rouge&quot;&gt;ctrl&lt;/code&gt; member to the &lt;code class=&quot;highlighter-rouge&quot;&gt;$scope&lt;/code&gt; which is the instance of the controller it will create. &lt;code class=&quot;highlighter-rouge&quot;&gt;bindToController&lt;/code&gt; then tells
+AngularJS to bind the scope variable (the attributes on our directive) to the controller instead of on &lt;code class=&quot;highlighter-rouge&quot;&gt;$scope&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This means that the &lt;code class=&quot;highlighter-rouge&quot;&gt;SomeModel&lt;/code&gt; member of the controller will be filled by whatever is passed into the &lt;code class=&quot;highlighter-rouge&quot;&gt;model&lt;/code&gt; attribute on the directive declaration.&lt;/p&gt;
+
+&lt;p&gt;In the view, we have to prefix everything with &lt;code class=&quot;highlighter-rouge&quot;&gt;ctrl&lt;/code&gt;, but that’s a tiny price to pay for easier, cleaner controllers. No more huge functions declaring more
+functions and so on. This also gives better refactoring power and type safety since it’s a class with clear members and functions.&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>Handling SVG is hard</title>
+		<link href="http://cdroulers.com/blog/2015/04/13/handling-svg-is-hard/"/>
+		<updated>2015-04-13T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/04/13/handling-svg-is-hard/</id>
+		<content type="html">&lt;p&gt;SVG is a pretty neat image format. But it’s not as easy to implement in a web page.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;Many different gotchas to watch out for, browser support is not totally there yet. Here are a few things I remember having to deal with.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;lt;img&amp;amp;gt;&lt;/code&gt; tags aren’t the best way to inline images&lt;/li&gt;
+  &lt;li&gt;Inlining the SVG XML directly in the page works best, but would increase the payload significantly since I have table of the same images&lt;/li&gt;
+  &lt;li&gt;I wanted to use the least JavaScript possible&lt;/li&gt;
+  &lt;li&gt;It needed to work on all recent browsers.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There were two steps. First, I wanted to use as much of SVG’s capabilities as possible, including styling. Since I wasn’t inline the SVG, I couldn’t
+style it using CSS in my HTML page’s source. Therefore, I created an &lt;code class=&quot;highlighter-rouge&quot;&gt;IHttpHandler&lt;/code&gt; to modify a base SVG file with some extra classes.&lt;/p&gt;
+
+&lt;p&gt;Then, on the client side, I implement some JavaScript to add hover functionality.&lt;/p&gt;
+
+&lt;p&gt;Here’s the &lt;code class=&quot;highlighter-rouge&quot;&gt;IHttpHandler&lt;/code&gt;:&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/cdroulers/9cc8f7094923f14ad5c5.js&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;Web.config&lt;/code&gt; file must be modified:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;system.webServer&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;handlers&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;add&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;SvgHandler&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;verb=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;*&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;path=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;*.svg&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Namespace.To.SvgHandler&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/handlers&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/system.webServer&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And here is an AngularJS directive for the JavaScript:&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/cdroulers/afa31c57cc48ea9b6539.js&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;IHttpHandler&lt;/code&gt; receives requests for all SVG files. It parses the file name and looks for class names in the format &lt;code class=&quot;highlighter-rouge&quot;&gt;svg-file-name.class-names.svg&lt;/code&gt;. I could have used the query
+string, but browsers will usually understand a query string to mean that the file cannot be cached properly.&lt;/p&gt;
+
+&lt;p&gt;To display an SVG, it’s a simple matter of using &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;lt;object&amp;amp;gt;&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#/some-link&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;btn clickable-svg&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;svg-hover&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;object&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/Path/To/SomeSvg.class-name.svg&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;image/svg+xml&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/object&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I had to do a tiny bit of CSS for &lt;code class=&quot;highlighter-rouge&quot;&gt;clickable-svg&lt;/code&gt; to work, otherwise, the mouse pointer doesn’t react properly:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-css&quot; data-lang=&quot;css&quot;&gt;&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.clickable-svg&lt;/span&gt;&lt;span class=&quot;nd&quot;&gt;:after&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;absolute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;top&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;bottom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.clickable-svg&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;relative&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>Contributing to NRules open-source project</title>
+		<link href="http://cdroulers.com/blog/2015/04/02/contributing-to-nrules/"/>
+		<updated>2015-04-02T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/04/02/contributing-to-nrules/</id>
+		<content type="html">&lt;p&gt;We found a bug, we fixed it, we made a pull request!&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;While using the &lt;a href=&quot;https://github.com/NRules/NRules&quot;&gt;NRules project&lt;/a&gt;, we found two bugs (at the same time)! Obviously, this was frustrating and hard to understand.&lt;/p&gt;
+
+&lt;p&gt;So a colleague and I got to work debugging, cloning the project locally and adding breakpoints in the code. We identified the breaking code!&lt;/p&gt;
+
+&lt;p&gt;I then opened the solution file and looked at the code and at the tests. The project has a very decent suite of unit tests! So I looked for tests on the method that
+was causing the problem, added a few more tests for our use case and looked at the failing tests. First step of TDD! Get some failing tests.&lt;/p&gt;
+
+&lt;p&gt;We then worked on fixing the bugs one by one, until all tests passed. We refactored a tiny bit along the way and created a &lt;a href=&quot;https://github.com/NRules/NRules/pull/52&quot;&gt;pull request&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;It was approved and the &lt;a href=&quot;https://www.nuget.org/packages/NRules/&quot;&gt;new version&lt;/a&gt; came out this morning! Open-source rocks!&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>AngularJS Unit Testing a Directive</title>
+		<link href="http://cdroulers.com/blog/2015/03/31/angularjs-unit-testing-directive/"/>
+		<updated>2015-03-31T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/03/31/angularjs-unit-testing-directive/</id>
+		<content type="html">&lt;p&gt;Writing an AngularJS directive is all fun and games until you start fixing bugs. Then regression appear and you look like an idiot.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;So I wrote my &lt;a href=&quot;/blog/2015/03/24/angular-parsers-and-formatters/&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;numeric&lt;/code&gt; directive&lt;/a&gt; recently and a few features were added and bugs reported.
+I added them and fixed them and obviously, since I had no tests, regressions appeared. So I set out to test my directive!&lt;/p&gt;
+
+&lt;p&gt;Here are the basics.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;describe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;shared.ui.directives.numeric&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IAugmentedJQuery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tests&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;shared&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ui&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;directives&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;INumericTestScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ITimeoutService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Load required modules
+&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;beforeEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;shared&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;beforeEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;shared.ui&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;beforeEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IRootScopeService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+        &lt;span class=&quot;na&quot;&gt;$compile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ICompileService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+        &lt;span class=&quot;na&quot;&gt;$timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ITimeoutService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;timeout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;// Generate the HTML that we would typically use for this directive
+&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;html&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;input type=\&quot;text\&quot; ng-model=\&quot;Price\&quot; &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; 
+                &lt;span class=&quot;s2&quot;&gt;&quot;numeric=\&quot;{ filter: 'currency', decimals: 2 }\&quot; &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; 
+                &lt;span class=&quot;s2&quot;&gt;&quot;min=\&quot;MinValue\&quot; max=\&quot;MaxValue\&quot;&amp;gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// Set the scope values to sane defaults for testing.
+&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Price&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MinValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MaxValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// This basically creates the DOM element from the string
+&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// And runs through the full Angular $digest scope.
+&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;element&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$compile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// append the element to the body during the test to see behaviour
+&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// while debugging
+&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;appendTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// This is called multiple times as it forces Angular
+&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// To re-evaluate its cycle
+&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$digest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}));&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;afterEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Remove from body after test, obviously.
+&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+    
+    &lt;span class=&quot;nx&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;should mark as invalid for min and valid when min changes&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MinValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$digest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+        &lt;span class=&quot;nx&quot;&gt;element&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// Enters the value in the input field
+&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// Forces Angular to realize the value has changed
+&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;trigger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;input&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// Force the blur event, which does the formatting.
+&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;// Not necessary for this specific test, but I added it as an example
+&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;blur&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;hasInvalidValidation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;hasClass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ng-invalid-min&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;hasInvalidValidation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MinValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$digest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Since the numeric directive uses $timeout while $watching min and max
+&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// We have to flush it synchronously for it to execute. ngMock
+&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// adds the flush method.
+&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;flush&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;hasInvalidValidation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;hasClass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ng-invalid-min&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;hasInvalidValidation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toBe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Carefully read the comments in the above code for specific tips and tricks on how to test it.&lt;/p&gt;
+
+&lt;p&gt;I now have a basic set up to test this directive, I can easily TDD the hell out of it for new features or bug reports!&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>AngularJS HTTP Interceptor to set headers</title>
+		<link href="http://cdroulers.com/blog/2015/03/28/angularjs-http-interceptor-for-headers/"/>
+		<updated>2015-03-28T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/03/28/angularjs-http-interceptor-for-headers/</id>
+		<content type="html">&lt;p&gt;Our new system is built in a distributed way. We have a bunch of services that have a clear responsibility and they are accessible over REST. Here’s how we handle a few 
+headers for calling them in AngularJS.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;The simplest use-case for this is internationalisation. Our app will need to be available in both French and English. Therefore, we are using HTTP’s &lt;code class=&quot;highlighter-rouge&quot;&gt;Accept-Language&lt;/code&gt; header.&lt;/p&gt;
+
+&lt;p&gt;The REST API checks for this header and returns any localisable data in that language as well as error messages or any other resource that can be translated.&lt;/p&gt;
+
+&lt;p&gt;To do this globally in our AngularJS application, we used an &lt;a href=&quot;https://docs.angularjs.org/api/ng/service/$http#interceptors&quot;&gt;HTTP interceptor&lt;/a&gt;. Here’s the gist :&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;angular&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;shared&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[])&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;factory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;httpRequestInterceptor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// The language can be configured any other way.
+&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// We'll eventually use $(&quot;html&quot;).attr(&quot;lang&quot;).
+&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Accept-Language&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;fr-CA&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;$httpProvider&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;$httpProvider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IHttpProvider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;$httpProvider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;httpRequestInterceptor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This is also used by our authentication library to set the &lt;code class=&quot;highlighter-rouge&quot;&gt;Authentication&lt;/code&gt; header for obvious purposes.&lt;/p&gt;
+
+&lt;p&gt;This means that any request made in our app via the &lt;code class=&quot;highlighter-rouge&quot;&gt;$http&lt;/code&gt; provider will have those headers.&lt;/p&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>ngTable URL state saving</title>
+		<link href="http://cdroulers.com/blog/2015/03/25/ng-table-url-state/"/>
+		<updated>2015-03-25T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/03/25/ng-table-url-state/</id>
+		<content type="html">&lt;p&gt;A popular and useful AngularJS plugin, &lt;a href=&quot;http://ngmodules.org/modules/ng-table&quot;&gt;ngTable&lt;/a&gt;, doesn’t save its state anywhere by default. Here’s how to fix it.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;So you build a neat table with lots of data and paging and sorting and grouping and whatnot. But then, after playing with it and leaving the page, you hit the back button
+and you’ve lost your place! You’re back on the first page with default sorting and grouping.&lt;/p&gt;
+
+&lt;p&gt;So you want to put it in the URL, obviously. So when you change the state, the URL changes and the back button works (and bookmarks as well!).&lt;/p&gt;
+
+&lt;p&gt;Quick and easy solution :&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;firstLoad&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;$scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;DealerListParams&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ngTableParams&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;angular&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;extend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;sorting&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;asc&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()),&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;getData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;$defer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IDeferred&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ngTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;INgTableParams&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;firstLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;firstLoad&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;// Regular loading code here
+&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;We use &lt;code class=&quot;highlighter-rouge&quot;&gt;angular.extend&lt;/code&gt; to pass defaults OR load data from the URL with &lt;code class=&quot;highlighter-rouge&quot;&gt;$location.search()&lt;/code&gt;. In the &lt;code class=&quot;highlighter-rouge&quot;&gt;getData&lt;/code&gt; function, we make sure we don’t change the URL on the first page
+load. But if we change the sorting or grouping or page or page count, the page’s URL will change to something like&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;?page=1&amp;amp;count=25&amp;amp;sorting%5BName%5D=asc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now if you click another link and leave the page, when you hit back, the URL will contain this information and the &lt;code class=&quot;highlighter-rouge&quot;&gt;angular.extend&lt;/code&gt; will take these values and pass them on to &lt;code class=&quot;highlighter-rouge&quot;&gt;getData&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, this triggers a full routing reload. Which means the entire controller is called. It’s probably not the end of the world, but it’s kind of annoying since it flashes content
+and could call more AJAX than needed.&lt;/p&gt;
+
+&lt;p&gt;So we extend the &lt;code class=&quot;highlighter-rouge&quot;&gt;$location&lt;/code&gt; object with a new method:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;$location&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;s2&quot;&gt;&quot;$route&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;s2&quot;&gt;&quot;$rootScope&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ILocationService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+     &lt;span class=&quot;nx&quot;&gt;$route&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IRouteService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+     &lt;span class=&quot;nx&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ng&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IRootScopeService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;searchReplace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lastRoute&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;un&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;$locationChangeSuccess&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;$route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lastRoute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;un&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arguments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}]);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now, we can simply call &lt;code class=&quot;highlighter-rouge&quot;&gt;$location.searchReplace(params.url())&lt;/code&gt; in our &lt;code class=&quot;highlighter-rouge&quot;&gt;getData&lt;/code&gt; function and the controller will not be reloaded. Back and forward will still reload the full page, but I
+haven’t gotten around to optimising that yet.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;UPDATE: As requested by a commenter (Bob Clingan), here is the code in standard JavaScript syntax.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;firstLoad&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;$scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;DealerListParams&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ngTableParams&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;angular&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;extend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;sorting&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;asc&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()),&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;getData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$defer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;firstLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;firstLoad&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+            &lt;span class=&quot;c1&quot;&gt;// Regular loading code here
+&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Extension code:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;$location&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;s2&quot;&gt;&quot;$route&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;s2&quot;&gt;&quot;$rootScope&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+     &lt;span class=&quot;nx&quot;&gt;$route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+     &lt;span class=&quot;nx&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;searchReplace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lastRoute&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;un&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$rootScope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;$locationChangeSuccess&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;$route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lastRoute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;un&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arguments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}]);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+</content>
+	</entry>
+	
+	<entry>
+		<title>AngularJS parsers and formatters</title>
+		<link href="http://cdroulers.com/blog/2015/03/24/angular-parsers-and-formatters/"/>
+		<updated>2015-03-24T00:00:00-04:00</updated>
+		<id>http://cdroulers.com/blog/2015/03/24/angular-parsers-and-formatters/</id>
+		<content type="html">&lt;p&gt;AngularJS’s ngModel directive is pretty neat. It lets you bind data to form controls. It’s also fairly extendable!&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;We’re trying to build a decent numeric input in our application and it’s kind of a mess. &lt;code class=&quot;highlighter-rouge&quot;&gt;input[type='number']&lt;/code&gt; doesn’t seem to perfectly fit our needs. So I started looking
+for third party solutions and I couldn’t find any. It also seems like Angular’s default i18n/i10n support is kind of lacking. It works for output (displaying data in an
+internationalized way) but not for input (parsing numbers or other in other cultures).&lt;/p&gt;
+
+&lt;p&gt;So I’m currently looking into building my own directive that uses AngularJS’s internals to format the numeric model into a currency or percentage or regular number but also allow
+entering it in the current user’s culture and then parsing it to a JavaScript float. I might have to do some awful, awful hacks like creating a regex from a formatted number!&lt;/p&gt;
+
+&lt;p&gt;If it works well, it shall be open-sourced through &lt;a href=&quot;https://github.com/vooban&quot;&gt;Vooban’s GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;EDIT:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;See a first draft in action here : &lt;a href=&quot;http://plnkr.co/edit/S92bQS?p=preview&quot;&gt;http://plnkr.co/edit/S92bQS?p=preview&lt;/a&gt;&lt;/p&gt;
+</content>
+	</entry>
+	
+</feed>

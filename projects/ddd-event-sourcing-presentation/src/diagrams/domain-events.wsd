@@ -1,0 +1,38 @@
+@startuml domain-events
+
+title Événements de Domaine
+
+class Événement {
+  +Id IdUtilisateur
+  +Id IdAggrégat
+  +DateTime Date
+}
+
+class PatientAssignéAuLit {
+  +Id IdLit
+}
+
+class PatientFacturé {
+  +Id IdHopital
+  +Argent Montant
+  +string Description
+}
+
+class AssuranceMaladieExpirée {
+  +Id IdCarte
+  +DateTime DateExpiration
+}
+
+class PatientAdmis {
+  +string Prénom
+  +string Nom
+  +Gender Genre
+  +string Notes
+}
+
+Événement <|-- PatientAssignéAuLit
+Événement <|-- PatientFacturé
+Événement <|-- AssuranceMaladieExpirée
+Événement <|-- PatientAdmis
+
+@enduml

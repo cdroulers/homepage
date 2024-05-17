@@ -1,0 +1,28 @@
+@startuml patient-events
+
+title Événements du Patient
+
+rectangle PatientCréé
+rectangle PatientAdmis
+rectangle "PatientAdmis" as PA2
+rectangle PatientDiagnostiqué
+rectangle "PatientDiagnostiqué" as PD2
+rectangle PrescriptionÉmise
+rectangle "PrescriptionÉmise" as PE2
+rectangle FactureÉmise
+rectangle PatientLibéré
+rectangle "PatientLibéré" as PL2
+rectangle AssuranceMaladieÉchue
+
+PatientCréé -down-> PatientAdmis
+PatientAdmis -down-> PatientDiagnostiqué
+PatientDiagnostiqué -right-> PrescriptionÉmise
+PrescriptionÉmise -up-> FactureÉmise
+FactureÉmise -up-> PatientLibéré
+PatientLibéré -right-> PA2
+PA2 -down-> PD2
+PD2 -down-> PE2
+PE2 -right-> PL2
+PL2 -right-> AssuranceMaladieÉchue
+
+@enduml

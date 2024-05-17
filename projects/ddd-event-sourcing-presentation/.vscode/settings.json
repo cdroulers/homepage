@@ -1,0 +1,21 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "node_modules": true
+  },
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.rulers": [100, 120],
+  "files.associations": {},
+  "javascript.validate.enable": false,
+  "prettier.bracketSpacing": true,
+  "prettier.singleQuote": false,
+  "prettier.printWidth": 100,
+  "eslint.packageManager": "yarn",
+  "html.format.enable": true,
+  "prettier.disableLanguages": [],
+  "plantuml.exportOutDir": "src/diagrams/out",
+  "plantuml.exportSubFolder": false,
+  "plantuml.exportFormat": "svg"
+}

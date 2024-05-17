@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: TypeScript properties and JSON.stringify</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>TypeScript properties and JSON.stringify</h2>
+            <p class="date">Posted on 2015-04-22</p>
+            
+
+            <p>TypeScript supports <a href="http://www.ecma-international.org/ecma-262/5.1/#sec-15.2.3.6">ECMA 5.1’s properties</a>
+<a href="http://www.typescriptlang.org/Handbook#classes-accessors">quite well</a> but it seems it doesn’t play well with <code class="highlighter-rouge">JSON.stringify()</code></p>
+
+<!-- more -->
+
+<p>This entire blog post talks about how I ended up mapping JSON from our REST API into our project’s TypeScript classes. The first problem when doing that
+was that we wanted classes in our code with all the functions and helpers and static properties and whatnot. So we defined them as classes with TypeScript.</p>
+
+<p>But when the JSON came back, it contained properties that had the same name as some functions, so the function would be overriden by any basic mapping code.</p>
+
+<p>So I set out to create a base class that was more mapping aware.</p>
+
+<p>The result is here: <a href="https://gist.github.com/cdroulers/479c966506c92ed1fac0">https://gist.github.com/cdroulers/479c966506c92ed1fac0</a></p>
+
+<p>The mapping magic happens in the constructor. The <code class="highlighter-rouge">data</code> parameter is the JSON (or undefined when not mapping). It iterates through every property of the data, 
+automatically ignoring functions of the class. Then, there are three options:</p>
+
+<ol>
+  <li>If the property found has a mapping function in the <code class="highlighter-rouge">_mapOptions</code> object, it calls that function to map the sub-entity. So if you have a tree of classes, they can
+  easily be mapped</li>
+  <li>If the property found has a mapping name in the <code class="highlighter-rouge">PropertyNames</code>, then the property is set on the object as the mapped property name.</li>
+  <li>If the property is not explicitely ignored, then it is simply mapped on the object.</li>
+</ol>
+
+<p>Option 2 is where the magic happens for Properties. Say you have a property like this one:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">class</span> <span class="nx">Test</span> <span class="p">{</span>
+    <span class="kr">private</span> <span class="nx">_name</span><span class="err">:</span> <span class="nx">string</span><span class="p">;</span>
+
+    <span class="kr">public</span> <span class="nx">get</span> <span class="nx">Name</span><span class="p">()</span><span class="err">:</span> <span class="nx">string</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Accessed Name"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_name</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kr">public</span> <span class="nx">set</span> <span class="nx">Name</span><span class="p">(</span><span class="nx">value</span><span class="err">:</span> <span class="nx">string</span><span class="p">)</span><span class="err">:</span> <span class="k">void</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">"You done messed up!"</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_name</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>When the JSON comes back from an API call with the <code class="highlighter-rouge">Name</code> property set to “Roger”, you don’t necessarily want it to go through the setter. So in the <code class="highlighter-rouge">_mapOptions</code>,
+you pass the following:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="nl">PropertyNames</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"Name"</span><span class="err">:</span> <span class="s2">"_name"</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Then, the JSON maps to private fields and no accessors are used and we have clean and pretty properties on our classes.</p>
+
+<p>Then when I wanted to serialize the class back into JSON, the properties did NOT show up! I was very confused. So I looked into how TypeScript generates the property
+and found it it defines it on the prototype of the class instead of on the object. The behaviour can be seen in 
+<a href="http://plnkr.co/edit/NXUo7zjJZaUuyv54TD9i?p=preview">this plunkr</a>. <code class="highlighter-rouge">Class1</code> is what TypeScript would generate for our class higher up the post. <code class="highlighter-rouge">JSON.stringify</code> doesn’t
+serialise properties defined on the prototype and I was a bit annoyed.</p>
+
+<p>I <a href="http://stackoverflow.com/questions/29705211/object-defineproperty-on-a-prototype-prevents-json-stringify-from-serializing-it">asked the question on Stack Overflow</a>
+and got responses basically indicating that it was standard behaviour and a few workarounds. I set out to work around it using the <code class="highlighter-rouge">toJSON</code> function. Since I keep the
+<code class="highlighter-rouge">_mapOptions</code> as a private member, I used those to reverse map property names and ignore certain properties. <code class="highlighter-rouge">toJSON</code> is automatically called by <code class="highlighter-rouge">JSON.stringify</code> so
+any framework that uses that to serialise your classes (AngularJS does!) will get a proper object to serialise.</p>
+
+<p>This is the best way I found to handle mapping to and from JSON with TypeScript. Any other suggestions?</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/04/22/typescript-properties-and-json-stringify/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/04/22/typescript-properties-and-json-stringify/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

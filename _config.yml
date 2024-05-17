@@ -1,0 +1,19 @@
+name: Christian Droulers
+description: Christian Droulers' personal web site.
+url: https://cdroulers.com
+encoding: utf-8
+
+markdown: kramdown
+highlighter: rouge
+
+gems: ["jekyll-paginate"]
+
+exclude: [homepage.sublime-project, homepage.sublime-workspace, projects/ddd-event-sourcing-presentation/node_modules]
+
+permalink: /blog/:year/:month/:day/:title/
+paginate: 25
+paginate_path: "/blog/page:num/"
+excerpt_separator: <!-- more -->
+
+sass:
+    style: :compressed

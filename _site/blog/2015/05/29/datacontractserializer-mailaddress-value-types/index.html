@@ -1,0 +1,214 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: DataContractSerializer, MailAddress and Value Types</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>DataContractSerializer, MailAddress and Value Types</h2>
+            <p class="date">Posted on 2015-05-29</p>
+            
+
+            <p>In our quest to be fast, we opted to stick a bunch of data inside an XML field in SQL Server with NHibernate.</p>
+
+<!-- more -->
+
+<p>The feature doesn’t have a lot of validation or business logic, so we opted to create a few columns for queryable data and an XML field for the rest. Our
+domain object looked just as it would with a full SQL schema, but we told <a href="http://nhibernate.info/">NHibernate</a> to serialize the object to XML when saving it.</p>
+
+<h3 id="the-mapping">The mapping</h3>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp">    <span class="nf">Map</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Data</span><span class="p">).</span><span class="n">CustomType</span><span class="p">&lt;</span><span class="n">XmlType</span><span class="p">&lt;</span><span class="n">AnObjectWeWantedInXml</span><span class="p">&gt;&gt;();</span> </code></pre></figure>
+
+<h3 id="the-xmltype">The XmlType</h3>
+
+<p>It’s available <a href="https://gist.github.com/cdroulers/6724d31b65f4060aaa6a">on github</a>.</p>
+
+<h3 id="reasoning">Reasoning</h3>
+
+<p>We’re still not sure what the client needs for this interface to be complete, and it’s also prone to changing because of business processes and products.</p>
+
+<p>This is why we opted for an XML field. It means we can easily add new properties to the <code class="highlighter-rouge">Data</code> object and it will get serialized automatically. Using
+<a href="https://msdn.microsoft.com/en-us/library/ms731072(v=vs.110).aspx"><code class="highlighter-rouge">DataContractSerializer</code></a> means we can easily get backwards compatibility because we can set
+default values.</p>
+
+<h3 id="mailaddress-and-value-types">MailAddress and Value Types</h3>
+
+<p>We had a <code class="highlighter-rouge">MailAddress</code> property somwhere in that data and it just wouldn’t serialize. That was a bummer at first because we like using semantic value types. We
+also had a few other types that had no default constructors that would fail to serialize. After looking into it, I found a decent solution: 
+<a href="https://msdn.microsoft.com/en-us/library/ms733064(v=vs.110).aspx"><code class="highlighter-rouge">IDataContractSurrogate</code></a>.</p>
+
+<p><code class="highlighter-rouge">IDataContractSurrogate</code> let’s you define code that will transform the objects during serialization and deserialization. This means that when we encounter a <code class="highlighter-rouge">MailAddress</code>,
+we can return a surrogate class that is serializable. Then, when reading the data, we do the opposite operation.</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">XmlDataContractSurrogate</span> <span class="p">:</span> <span class="n">IDataContractSurrogate</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Type</span> <span class="nf">GetDataContractType</span><span class="p">(</span><span class="n">Type</span> <span class="n">type</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">MailAddress</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="n">XmlMailAddressSurrogate</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Money</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="n">XmlMoneySurrogate</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">type</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="kt">object</span> <span class="nf">GetObjectToSerialize</span><span class="p">(</span><span class="kt">object</span> <span class="n">obj</span><span class="p">,</span> <span class="n">Type</span> <span class="n">targetType</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">address</span> <span class="p">=</span> <span class="n">obj</span> <span class="k">as</span> <span class="n">MailAddress</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">address</span> <span class="p">!=</span> <span class="k">null</span> <span class="p">&amp;&amp;</span> <span class="n">targetType</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">XmlMailAddressSurrogate</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">XmlMailAddressSurrogate</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">Address</span> <span class="p">=</span> <span class="n">address</span><span class="p">.</span><span class="n">Address</span><span class="p">,</span>
+                <span class="n">DisplayName</span> <span class="p">=</span> <span class="n">address</span><span class="p">.</span><span class="n">DisplayName</span> 
+            <span class="p">};</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">obj</span> <span class="k">is</span> <span class="n">Money</span> <span class="p">&amp;&amp;</span> <span class="n">targetType</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">XmlMoneySurrogate</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">XmlMoneySurrogate</span><span class="p">()</span> <span class="p">{</span> <span class="n">Value</span> <span class="p">=</span> <span class="p">((</span><span class="n">Money</span><span class="p">)</span><span class="n">obj</span><span class="p">).</span><span class="n">Value</span> <span class="p">};</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="kt">object</span> <span class="nf">GetDeserializedObject</span><span class="p">(</span><span class="kt">object</span> <span class="n">obj</span><span class="p">,</span> <span class="n">Type</span> <span class="n">targetType</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">address</span> <span class="p">=</span> <span class="n">obj</span> <span class="k">as</span> <span class="n">XmlMailAddressSurrogate</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">address</span> <span class="p">!=</span> <span class="k">null</span> <span class="p">&amp;&amp;</span> <span class="n">targetType</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">MailAddress</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">MailAddress</span><span class="p">(</span><span class="n">address</span><span class="p">.</span><span class="n">Address</span><span class="p">,</span> <span class="n">address</span><span class="p">.</span><span class="n">DisplayName</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kt">var</span> <span class="n">money</span> <span class="p">=</span> <span class="n">obj</span> <span class="k">as</span> <span class="n">XmlMoneySurrogate</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">money</span> <span class="p">!=</span> <span class="k">null</span> <span class="p">&amp;&amp;</span> <span class="n">targetType</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Money</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Money</span><span class="p">(</span><span class="n">money</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kt">var</span> <span class="n">array</span> <span class="p">=</span> <span class="n">obj</span> <span class="k">as</span> <span class="n">Array</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">array</span> <span class="p">!=</span> <span class="k">null</span> <span class="p">&amp;&amp;</span>
+            <span class="n">targetType</span><span class="p">.</span><span class="n">IsGenericType</span> <span class="p">&amp;&amp;</span>
+            <span class="p">(</span><span class="n">targetType</span><span class="p">.</span><span class="nf">GetGenericTypeDefinition</span><span class="p">()</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">ICollection</span><span class="p">&lt;&gt;)</span> <span class="p">||</span> 
+            <span class="n">targetType</span><span class="p">.</span><span class="nf">GetGenericTypeDefinition</span><span class="p">()</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">IList</span><span class="p">&lt;&gt;)))</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">elementType</span> <span class="p">=</span> <span class="n">targetType</span><span class="p">.</span><span class="nf">GetGenericArguments</span><span class="p">()[</span><span class="m">0</span><span class="p">];</span>
+
+            <span class="kt">var</span> <span class="n">listType</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">List</span><span class="p">&lt;&gt;).</span><span class="nf">MakeGenericType</span><span class="p">(</span><span class="n">elementType</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="p">(</span><span class="n">IList</span><span class="p">)</span><span class="n">Activator</span><span class="p">.</span><span class="nf">CreateInstance</span><span class="p">(</span><span class="n">listType</span><span class="p">);</span>
+
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">array</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">result</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">item</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="kt">object</span> <span class="nf">GetCustomDataToExport</span><span class="p">(</span><span class="n">MemberInfo</span> <span class="n">memberInfo</span><span class="p">,</span> <span class="n">Type</span> <span class="n">dataContractType</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="kt">object</span> <span class="nf">GetCustomDataToExport</span><span class="p">(</span><span class="n">Type</span> <span class="n">clrType</span><span class="p">,</span> <span class="n">Type</span> <span class="n">dataContractType</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">GetKnownCustomDataTypes</span><span class="p">(</span><span class="n">Collection</span><span class="p">&lt;</span><span class="n">Type</span><span class="p">&gt;</span> <span class="n">customDataTypes</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">Type</span> <span class="nf">GetReferencedTypeOnImport</span><span class="p">(</span><span class="kt">string</span> <span class="n">typeName</span><span class="p">,</span> <span class="kt">string</span> <span class="n">typeNamespace</span><span class="p">,</span> <span class="kt">object</span> <span class="n">customData</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">Type</span><span class="p">.</span><span class="nf">GetType</span><span class="p">(</span><span class="n">typeNamespace</span> <span class="p">+</span> <span class="s">"."</span> <span class="p">+</span> <span class="n">typeName</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">CodeTypeDeclaration</span> <span class="nf">ProcessImportedType</span><span class="p">(</span>
+        <span class="n">CodeTypeDeclaration</span> <span class="n">typeDeclaration</span><span class="p">,</span> 
+        <span class="n">CodeCompileUnit</span> <span class="n">compileUnit</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">typeDeclaration</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The code for <code class="highlighter-rouge">Array</code> in <code class="highlighter-rouge">GetDeserializedObject</code> is because we used <code class="highlighter-rouge">ICollection&lt;T&gt;</code> in our data object, which would be deserialized in a <code class="highlighter-rouge">T[]</code>. This caused problems
+later on with <a href="http://automapper.org/">AutoMapper</a> because it tried to <code class="highlighter-rouge">Clear()</code> the collection, which was read-only. It also makes more sense to put an actual
+collection inside an <code class="highlighter-rouge">ICollection&lt;T&gt;</code>.</p>
+
+<p>The actual <code class="highlighter-rouge">XmlMailAddressSurrogate</code> is a very simple POCO object:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">class</span> <span class="nc">XmlMailAddressSurrogate</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Address</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">DisplayName</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>With all this, we can develop our REST api faster while keeping a modicum of structure in our data. SQL Server’s XML field is fully queryable. If we need to extract some data
+from the XML into new columns, we can do that with a normal <code class="highlighter-rouge">UPDATE</code> statement.</p>
+
+<p>SQL Server Management Studio also makes it easy to inspect and modify the XML data.</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/05/29/datacontractserializer-mailaddress-value-types/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/05/29/datacontractserializer-mailaddress-value-types/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

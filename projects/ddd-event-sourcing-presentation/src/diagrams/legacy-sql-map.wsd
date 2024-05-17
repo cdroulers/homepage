@@ -1,0 +1,51 @@
+@startuml legacy-sql-map
+
+title Données Legacy vers événements
+
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <u>x</u>
+hide methods
+hide stereotypes
+
+rectangle "Événements" as Events {
+  class PatientEnregistré
+  class PatientAdmis
+  class PatientAssignéAuLit
+  class PatientLibéré
+
+  PatientEnregistré -d-> PatientAdmis
+  PatientAdmis -up-> PatientAssignéAuLit
+  PatientAssignéAuLit -d-> PatientLibéré
+}
+
+rectangle "Données Patient Legacy" as PatientData {
+  table(Patient) {
+    primary_key(Id): INT
+    Prénom: NVARCHAR
+    Nom: NVARCHAR
+    Genre: CHAR
+    NuméroRamq: NVARCHAR
+    ExpirationRamq: DATE
+  }
+
+  table(LitsPatient) {
+    primary_key(Id): INT
+    IdLit: NVARCHAR
+    Depuis: DATETIME
+    Jusqua: DATETIME
+  }
+
+  table(HopitalPatient) {
+    primary_key(Id): INT
+    IdHopital: INT
+    IdPatient: INT
+    Identifiant: NVARCHAR
+  }
+}
+
+Patient "1" *-up- "*" LitsPatient
+Patient "1" *-up- "*" HopitalPatient
+
+PatientData <== Events
+
+@enduml

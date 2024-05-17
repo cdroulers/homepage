@@ -1,0 +1,42 @@
+@startuml new-architecture
+
+skinparam default {
+  FontStyle bold
+	FontSize 30
+}
+
+rectangle "Nouveau Code" {
+    rectangle "UI" {
+      (Nouvelle Interface) as NewUI
+      (Nouvelle API) as NewAPI
+    }
+    database (BD NoSQL) as NewDB
+    rectangle "Modernité maximale" {
+      (DDD)
+      (ES)
+      (Repository)
+    }
+    (Gestionnaire Offline) as OEH
+    (Gestionnaire Legacy) as LEH
+    (Gestionnaire BI) as BIEH
+}
+
+rectangle "Code Legacy" {
+    (BD Legacy) as LegacyDB
+    (Intégration)
+}
+
+DDD =right=> Repository
+Repository =right=> LegacyDB
+Repository =down=> ES
+ES => LEH
+ES =left=> OEH
+ES ---> BIEH
+LEH ---> LegacyDB
+NewUI -right-> NewAPI
+NewAPI ---> DDD
+OEH ---> NewDB
+BIEH ---> LegacyDB
+Intégration ---> NewAPI
+BIEH ==> (???)
+@enduml

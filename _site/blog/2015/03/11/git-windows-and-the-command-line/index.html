@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: Git, Windows, private keys and the command line</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>Git, Windows, private keys and the command line</h2>
+            <p class="date">Posted on 2015-03-11</p>
+            
+
+            <p>Getting Git to work on Windows is starting to get easier. Especially with GUIs like <a href="http://www.sourcetreeapp.com/">SourceTree</a> or <a href="https://code.google.com/p/tortoisegit/">TortoiseGit</a>.</p>
+
+<!-- more -->
+
+<p>For hardcore people like me, a command line interface is almost necessary and that’s where it gets trickier. When installing git, you get the command line interface and most features
+work. But when you want to use public/private key pairs (awesome features usually supported by the likes of <a href="https://github.com/">GitHub</a> or <a href="https://bitbucket.org/">BitBucket</a>), the basic
+installation doesn’t work. Git tries to use ssh.exe, which tries to load keys via ssh-agent, which doesn’t work on Windows.</p>
+
+<p>So <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">putty</a> comes to the rescue!</p>
+
+<p>plink.exe and pageant.exe are required for this setup.</p>
+
+<p>The first step is to tell git to use plink.exe for SSH. It needs an environment variable named <code class="highlighter-rouge">GIT_SSH</code></p>
+
+<p>The second step is to load your keys with pageant.exe before calling your commands.</p>
+
+<p>I personally modified my PowerShell profile to do the following:</p>
+
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="s2">"Setting home path"</span>
+<span class="o">(</span><span class="nb">Get-PSProvider</span> <span class="s2">"FileSystem"</span><span class="o">)</span>.Home <span class="o">=</span> <span class="nv">$env</span>:USERPROFILE;
+
+where.exe /Q plink.exe
+<span class="k">if</span> <span class="o">(</span><span class="nv">$LASTEXITCODE</span> -eq 0<span class="o">)</span>
+<span class="o">{</span>
+    <span class="c1"># Add the path to plink and pageant to the path.
+</span>
+    <span class="s2">"Found plink.exe, setting </span><span class="sb">`</span><span class="nv">$env</span>:GIT_SSH<span class="s2">"
+    </span><span class="nv">$env</span><span class="s2">:GIT_SSH = "</span>plink.exe<span class="s2">";
+}
+
+where.exe /Q pageant.exe
+if (</span><span class="nv">$LASTEXITCODE</span><span class="s2"> -eq 0)
+{
+    </span><span class="nv">$privateKeys</span><span class="s2"> = [string]::Join("</span> <span class="s2">", (ls ~/.ssh/*.ppk).FullName)
+    "</span>Found pageant.exe, loading default keys <span class="o">({</span>0<span class="o">})</span><span class="s2">" -f </span><span class="nv">$privateKeys</span><span class="s2">;
+    iex "</span>pageant.exe <span class="nv">$privateKeys</span><span class="s2">"
+}
+""</span></code></pre></figure>
+
+<p>The first part is to make sure that <code class="highlighter-rouge">~</code> resolves to my home directory in PowerShell.</p>
+
+<p>The second is to check if plink.exe is available on the <code class="highlighter-rouge">PATH</code> and then update my environment variable to point to it.</p>
+
+<p>The last step is to list all private keys in my <code class="highlighter-rouge">.ssh</code> folder and tell pageant.exe to load them.</p>
+
+<p>Since I start PowerShell automatically anytime I start my computer, it asks for the private key passwords and then any other tab I open doesn’t ask again.</p>
+
+<p>This can also be set up the regular way, by modifying your environment variables directly and setting up a startup script for your Windows user account.</p>
+
+<p>After that, <code class="highlighter-rouge">git fetch</code>, <code class="highlighter-rouge">git pull</code> and <code class="highlighter-rouge">git push</code> will start working like it’s no big deal!</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/03/11/git-windows-and-the-command-line/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/03/11/git-windows-and-the-command-line/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

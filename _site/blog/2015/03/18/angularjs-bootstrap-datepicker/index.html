@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: AngularJS Bootstrap Datepicker</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>AngularJS Bootstrap Datepicker</h2>
+            <p class="date">Posted on 2015-03-18</p>
+            
+
+            <p>The Twitter bootstrap framework is a great tool to quick-start applications and continue building them in the long term. 
+They even built an <a href="https://angular-ui.github.io/bootstrap/">AngularJS library</a> to easily integrate the two.</p>
+
+<!-- more -->
+
+<p>I wanted to integrate the <a href="https://angular-ui.github.io/bootstrap/#/datepicker">Datepicker</a> since we have a birth date field in our forms. The problem was that
+according to the example, we had to declare a boolean <code class="highlighter-rouge">opened</code>property AND an <code class="highlighter-rouge">open</code> function on the scope to set <code class="highlighter-rouge">opened</code> to true. 
+(Read the example linked previously to see what I mean)</p>
+
+<p>This is a bit annoying. I really don’t want to pollute my controller code with multiple boolean values and functions just to open a datepicker when clicking on the add-on button.</p>
+
+<p>The solution I found while researching is the following:</p>
+
+<p>Modify the global scope to have a globally available function for opening date pickers:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre></td><td class="code"><pre><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"shared.ui"</span><span class="p">).</span><span class="nx">config</span><span class="p">((</span><span class="nx">$provide</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">$provide</span><span class="p">.</span><span class="nx">decorator</span><span class="p">(</span><span class="s2">"$rootScope"</span><span class="p">,(</span><span class="nx">$delegate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">$delegate</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">OpenDatePicker</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$event</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">$event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+            <span class="nx">$event</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">();</span>
+
+            <span class="kd">var</span> <span class="nx">fieldName</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">$event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">parents</span><span class="p">(</span><span class="s2">".input-group:first"</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">":input[datepicker-options]"</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">"name"</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">[</span><span class="s2">"datePickerOpenedFor"</span> <span class="o">+</span> <span class="nx">fieldName</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">};</span>
+        <span class="k">return</span> <span class="nx">$delegate</span><span class="p">;</span>
+    <span class="p">});</span>
+<span class="p">})</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>And then, when creating the datepicker, this method can be used automatically:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td><td class="code"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"input-group has-addon"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> 
+        <span class="na">class=</span><span class="s">"form-control"</span> 
+        <span class="na">datepicker-options=</span><span class="s">"{ }"</span> 
+        <span class="na">datepicker-popup=</span><span class="s">""</span>
+        <span class="na">id=</span><span class="s">"dateOfBirth"</span>
+        <span class="na">is-open=</span><span class="s">"datePickerOpenedFordateOfBirth"</span>
+        <span class="na">name=</span><span class="s">"dateOfBirth"</span>
+        <span class="na">ng-click=</span><span class="s">"OpenDatePicker($event)"</span>
+        <span class="na">ng-model=</span><span class="s">"DateOfBirth"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"input-group-btn"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">class=</span><span class="s">"btn btn-default"</span> <span class="na">ng-click=</span><span class="s">"OpenDatePicker($event)"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"glyphicon glyphicon-calendar"</span><span class="nt">&gt;&lt;/i&gt;</span>
+        <span class="nt">&lt;/button&gt;</span>
+    <span class="nt">&lt;/span&gt;</span>
+<span class="nt">&lt;/div&gt;</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<p>As you can see, the <code class="highlighter-rouge">OpenDatePicker</code> function is available on every scope. It basically just looks for the input’s name to modify the <code class="highlighter-rouge">datePickerOpenedFor{name}</code> boolean property.</p>
+
+<p>Now I can easily add new Datepickers anywhere I want without worrying about setting it up manually.</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/03/18/angularjs-bootstrap-datepicker/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/03/18/angularjs-bootstrap-datepicker/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

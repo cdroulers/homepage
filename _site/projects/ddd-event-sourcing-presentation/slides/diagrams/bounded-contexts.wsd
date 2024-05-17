@@ -1,0 +1,38 @@
+@startuml bounded-contexts
+
+title 4 contextes
+
+
+rectangle "Contexte de Facturation" as BC {
+    (Facture) as PI
+    (Patient) as BP
+}
+
+rectangle "Contexte Médical" as MC {
+    (Patient)
+    (Lit) as CDU
+    (Prescription) as MCP
+}
+
+rectangle "Contexte Démographique" as DC {
+    (Patient) as DP
+    (Adresse) as PA
+    (NumeroIndex) as DCNI
+}
+
+rectangle "Contexte Maintenance" as MAINC {
+    (Équipement) as EQ
+    (Lit) as MPB
+}
+
+BP =[bold]= Patient: Similaire
+BP =[bold]= DP: Similaire
+DP =[bold]= Patient: Similaire
+Patient -right-> CDU
+Patient -left-> MCP
+BP -left-> PI
+DP -right-> PA
+DP -left-> DCNI
+MPB -down- CDU: Similaire
+
+@enduml

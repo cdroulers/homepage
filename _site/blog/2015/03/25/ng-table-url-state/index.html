@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: ngTable URL state saving</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>ngTable URL state saving</h2>
+            <p class="date">Posted on 2015-03-25</p>
+            
+
+            <p>A popular and useful AngularJS plugin, <a href="http://ngmodules.org/modules/ng-table">ngTable</a>, doesn’t save its state anywhere by default. Here’s how to fix it.</p>
+
+<!-- more -->
+
+<p>So you build a neat table with lots of data and paging and sorting and grouping and whatnot. But then, after playing with it and leaving the page, you hit the back button
+and you’ve lost your place! You’re back on the first page with default sorting and grouping.</p>
+
+<p>So you want to put it in the URL, obviously. So when you change the state, the URL changes and the back button works (and bookmarks as well!).</p>
+
+<p>Quick and easy solution :</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">firstLoad</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="nx">$scope</span><span class="p">.</span><span class="nx">DealerListParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ngTableParams</span><span class="p">(</span>
+    <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span> <span class="na">page</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">count</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="na">sorting</span><span class="p">:</span> <span class="p">{</span> <span class="na">Id</span><span class="p">:</span> <span class="s2">"asc"</span> <span class="p">}</span> <span class="p">},</span> <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">()),</span>
+    <span class="p">{</span>
+        <span class="na">total</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="na">counts</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+        <span class="na">getData</span><span class="p">:</span> <span class="p">(</span><span class="na">$defer</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IDeferred</span><span class="p">,</span> <span class="na">params</span><span class="p">:</span> <span class="nx">ngTable</span><span class="p">.</span><span class="nx">INgTableParams</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">firstLoad</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="nx">firstLoad</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+            <span class="c1">// Regular loading code here
+</span>
+        <span class="p">}</span>
+    <span class="p">});</span></code></pre></figure>
+
+<p>We use <code class="highlighter-rouge">angular.extend</code> to pass defaults OR load data from the URL with <code class="highlighter-rouge">$location.search()</code>. In the <code class="highlighter-rouge">getData</code> function, we make sure we don’t change the URL on the first page
+load. But if we change the sorting or grouping or page or page count, the page’s URL will change to something like</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>?page=1&amp;count=25&amp;sorting%5BName%5D=asc
+</code></pre>
+</div>
+
+<p>Now if you click another link and leave the page, when you hit back, the URL will contain this information and the <code class="highlighter-rouge">angular.extend</code> will take these values and pass them on to <code class="highlighter-rouge">getData</code>.</p>
+
+<p>Unfortunately, this triggers a full routing reload. Which means the entire controller is called. It’s probably not the end of the world, but it’s kind of annoying since it flashes content
+and could call more AJAX than needed.</p>
+
+<p>So we extend the <code class="highlighter-rouge">$location</code> object with a new method:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span>
+    <span class="s2">"$location"</span><span class="p">,</span> 
+    <span class="s2">"$route"</span><span class="p">,</span> 
+    <span class="s2">"$rootScope"</span><span class="p">,</span> 
+    <span class="p">(</span><span class="nx">$location</span><span class="err">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">ILocationService</span><span class="p">,</span> 
+     <span class="nx">$route</span><span class="err">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">route</span><span class="p">.</span><span class="nx">IRouteService</span><span class="p">,</span> 
+     <span class="nx">$rootScope</span><span class="err">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IRootScopeService</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="p">(</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="nx">$location</span><span class="p">).</span><span class="nx">searchReplace</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">lastRoute</span> <span class="o">=</span> <span class="nx">$route</span><span class="p">.</span><span class="nx">current</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">un</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="s2">"$locationChangeSuccess"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+                <span class="nx">$route</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">lastRoute</span><span class="p">;</span>
+                <span class="nx">un</span><span class="p">();</span>
+            <span class="p">});</span>
+            <span class="k">return</span> <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">$location</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+        <span class="p">};</span>
+    <span class="p">}]);</span></code></pre></figure>
+
+<p>Now, we can simply call <code class="highlighter-rouge">$location.searchReplace(params.url())</code> in our <code class="highlighter-rouge">getData</code> function and the controller will not be reloaded. Back and forward will still reload the full page, but I
+haven’t gotten around to optimising that yet.</p>
+
+<p><strong>UPDATE: As requested by a commenter (Bob Clingan), here is the code in standard JavaScript syntax.</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">firstLoad</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="nx">$scope</span><span class="p">.</span><span class="nx">DealerListParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ngTableParams</span><span class="p">(</span>
+    <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span> <span class="na">page</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">count</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="na">sorting</span><span class="p">:</span> <span class="p">{</span> <span class="na">Id</span><span class="p">:</span> <span class="s2">"asc"</span> <span class="p">}</span> <span class="p">},</span> <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">()),</span>
+    <span class="p">{</span>
+        <span class="na">total</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="na">counts</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+        <span class="na">getData</span><span class="p">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$defer</span><span class="p">,</span> <span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">firstLoad</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="nx">firstLoad</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+            <span class="c1">// Regular loading code here
+</span>
+        <span class="p">}</span>
+    <span class="p">});</span></code></pre></figure>
+
+<p>Extension code:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span>
+    <span class="s2">"$location"</span><span class="p">,</span> 
+    <span class="s2">"$route"</span><span class="p">,</span> 
+    <span class="s2">"$rootScope"</span><span class="p">,</span> 
+    <span class="kd">function</span> <span class="p">(</span><span class="nx">$location</span><span class="p">,</span> 
+     <span class="nx">$route</span><span class="p">,</span> 
+     <span class="nx">$rootScope</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$location</span><span class="p">.</span><span class="nx">searchReplace</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">lastRoute</span> <span class="o">=</span> <span class="nx">$route</span><span class="p">.</span><span class="nx">current</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">un</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="s2">"$locationChangeSuccess"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+                <span class="nx">$route</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">lastRoute</span><span class="p">;</span>
+                <span class="nx">un</span><span class="p">();</span>
+            <span class="p">});</span>
+            <span class="k">return</span> <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">$location</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+        <span class="p">};</span>
+    <span class="p">}]);</span></code></pre></figure>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/03/25/ng-table-url-state/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/03/25/ng-table-url-state/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

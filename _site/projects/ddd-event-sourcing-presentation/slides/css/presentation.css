@@ -1,0 +1,48 @@
+.reveal {
+  font-size: 30px;
+}
+
+.reveal ul {
+  line-height: 1.5;
+}
+
+.reveal svg {
+  margin: 15px 0px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 4px solid #333;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.reveal section.author img {
+  height: 13em;
+  margin-left: 2em;
+}
+
+.reveal section img.icon {
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  background: none;
+}
+
+.split {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reveal .split ul {
+  margin-top: 4em;
+}
+
+.reveal pre {
+  margin: 0;
+  width: 100%;
+  font-size: 1.1em;
+}
+
+.reveal pre code {
+  max-height: none;
+}

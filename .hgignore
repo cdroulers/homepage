@@ -1,0 +1,5 @@
+syntax: glob
+
+*.sublime-workspace
+_site
+projects/ddd-event-sourcing-presentation/node_modules

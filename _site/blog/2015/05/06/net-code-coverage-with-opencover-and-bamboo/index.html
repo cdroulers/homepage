@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: .NET code coverage with OpenCover and Bamboo</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>.NET code coverage with OpenCover and Bamboo</h2>
+            <p class="date">Posted on 2015-05-06</p>
+            
+
+            <p>Code coverage is a neat metric to have on a project. It can give you a rough idea of how robust your code is.</p>
+
+<!-- more -->
+
+<p>Starting a brand new projects has a lot of perks. One of those is a green field for starting testing the proper way. Testing is hard, obviously.
+With a new project, you can apply TDD as much as possible. You can use the 
+<a href="/blog/2015/04/29/data-driven-testing-and-excel-hate/">right tools for the job</a>. You can make sure that the team stays on track.</p>
+
+<p>You want to make sure that everyone agrees on the way to go and understands why. Everyone is on board with testing on the project, and it’s great to see unit, integration and
+systems tests (NUnit and Selenium, blog post to come) come along a pull request. But what’s a good way to <strong>measure</strong> test quality? It’s 
+<a href="https://stackoverflow.com/questions/262727/how-do-you-measure-the-quality-of-your-unit-tests">not an easy question to answer</a>. I think the more data we can have, the better.</p>
+
+<p>So I set out to integrate a code coverage tool into our automated build so we could have a decent trend over time of our coverage. It’s obviously not the only thing we will
+use to determine quality, but it’s a data point!</p>
+
+<p><a href="https://stackoverflow.com/questions/276829/code-coverage-for-c-net">There are a lot of tools</a> for getting code coverage. I usually try the open-source approach first
+because that’s just the way I like things! <a href="https://github.com/OpenCover/opencover">OpenCover</a> was basically the only free one that is actively maintained. It seemed
+to have a lot of features, an active community, good tutorials and integration with a lot of tools.</p>
+
+<p>I modified the unit tests step in our <a href="https://github.com/fsharp/FAKE">FAKE</a> build to run the tests through OpenCover so coverage could be gathered while the tests run
+normally as part of the build process.</p>
+
+<script src="https://gist.github.com/cdroulers/530d4ef4e0ee07c98a1e.js"></script>
+
+<p>There really wasn’t that much magic to it. OpenCover watches every DLL loaded while the <code class="highlighter-rouge">nunit-console.exe</code> runs the tests and uses the filter to know if it should record
+coverage for that file.</p>
+
+<p>OpenCover on its own simply generates an XML report that isn’t very user friendly. But using <a href="https://github.com/danielpalme/ReportGenerator">ReportGenerator</a> allows us
+to generate a great HTML report with percentage for each assembly, namespace, class, etc. We can even open each file and see which lines are not covered as well as
+which branches are not covered. In the latest version, it’s even possible to get a history / trend of coverage between each report. I have not looking into it yet.</p>
+
+<p>Last step is generating <a href="https://www.ncover.com/">NCover</a> output from the OpenCover XML file so we can tell <a href="https://www.atlassian.com/software/bamboo">Bamboo</a> to read it. 
+The <code class="highlighter-rouge">XSL</code> file is available in the <a href="https://github.com/OpenCover/opencover/wiki/Monitoring-coverage-in-Atlassian-Bamboo">OpenCover wiki</a>. For Bamboo, we simply need to
+open the build plan configuration, click on the job we run the OpenCover code in and select the “Miscellaneous” tab. There’s an option for NCover, we simply write down
+the path of the folder where we generated the NCover output. The NCover file <strong>has</strong> to be in a directory.</p>
+
+<figure>
+    <img src="/assets/images/open-cover-summary.jpg" alt="NCover Bamboo output" />
+    <figcaption>Look at that dot!</figcaption>
+</figure>
+
+<p>It’s possible to have multiple files in the directory, Bamboo will then create an average between all the files. The ReportGenerator output is also added as an Artifact
+of the build, so we can look at it and keep it in the build history. The Bamboo graph is fairly basic, but it’s enough to get a glance and dig in the artifact if
+necessary.</p>
+
+<p>The <code class="highlighter-rouge">XSL</code> transform takes the line coverage data points from OpenCover’s output. It trivial to change it to use branch points. Simply replace <code class="highlighter-rouge">SequencePoints/SequencePoint</code>
+to <code class="highlighter-rouge">BranchPoints/BranchPoint</code> in the <code class="highlighter-rouge">XSL</code> file.</p>
+
+<p>So far the only small problem I’ve found is that the output Bamboo parses doesn’t have the same percentage as the OpenCover results. I’m guessing the <code class="highlighter-rouge">XSL</code> loses a bit
+of data. I’ll look into it eventually.</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/05/06/net-code-coverage-with-opencover-and-bamboo/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/05/06/net-code-coverage-with-opencover-and-bamboo/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

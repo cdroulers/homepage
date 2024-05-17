@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: Testing AngularJS controllers</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>Testing AngularJS controllers</h2>
+            <p class="date">Posted on 2015-04-26</p>
+            
+
+            <p>So I just blogged about <a href="/blog/2015/04/18/typescript-controllers-for-angularjs/">writing controllers in TypeScript</a>. Here’s how to write tests
+for them now.</p>
+
+<!-- more -->
+
+<p>We recently refactored <strong>all</strong> our controllers to become classes and also (quite importantly) not use <code class="highlighter-rouge">$scope.$watch</code> anymore. We went this way after experiencing
+problems with <code class="highlighter-rouge">$watch</code> itself and testability. <a href="http://www.benlesh.com/2013/10/title.html">This blog article</a> outlines good reasons not to do it.</p>
+
+<p>Our general guideline is to now use JavaScript properties when we want to have a value changing affect another in the same model or a child model. We also use
+events when crossing model or controller borders.</p>
+
+<p>With that in mind, anything that can be made to happen in a model is a straight forward test. Then, most things that can happen in a controller become easy to
+test as well! There should be a very limited set of actions that a controller can do. It can <code class="highlighter-rouge">$emit</code> or <code class="highlighter-rouge">$broadcast</code> events, it can call AJAX (via a service
+ideally) and it can respond to events.</p>
+
+<p>Here’s a simple sample test class for a controller.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">describe</span><span class="p">(</span><span class="s2">"app.controllers.YourController"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="na">scope</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IScope</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="na">controller</span><span class="p">:</span> <span class="nx">app</span><span class="p">.</span><span class="nx">controllers</span><span class="p">.</span><span class="nx">YourController</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="na">serviceMock</span><span class="p">:</span> <span class="nx">app</span><span class="p">.</span><span class="nx">services</span><span class="p">.</span><span class="nx">IService</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="na">rootScope</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IRootScopeService</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="na">q</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IQService</span><span class="p">;</span>
+
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">module</span><span class="p">(</span><span class="s2">"app"</span><span class="p">));</span>
+
+    <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">inject</span><span class="p">((</span>
+                <span class="na">$rootScope</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IRootScopeService</span><span class="p">,</span> 
+                <span class="na">$q</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IQService</span><span class="p">,</span> 
+                <span class="na">$injector</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IInjector</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">scope</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$new</span><span class="p">();</span>
+            <span class="nx">rootScope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">;</span>
+            <span class="nx">q</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">;</span>
+
+            <span class="nx">serviceMock</span> <span class="o">=</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">createSpyObj</span><span class="p">(</span><span class="s2">"app.services.Service"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"GetAll"</span><span class="p">]);</span>
+            <span class="p">(</span><span class="o">&lt;</span><span class="nx">jasmine</span><span class="p">.</span><span class="nx">Spy</span><span class="o">&gt;</span><span class="nx">serviceMock</span><span class="p">.</span><span class="nx">GetAll</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">returnValue</span><span class="p">([</span><span class="s2">"thing"</span><span class="p">]);</span>
+
+            <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">app</span><span class="p">.</span><span class="nx">controllers</span><span class="p">.</span><span class="nx">YourController</span><span class="p">(</span>
+                <span class="nx">scope</span><span class="p">,</span>
+                <span class="nx">serviceMock</span><span class="p">,</span>
+                <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"otherDependency"</span><span class="p">));</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="s2">"should load all things"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">Things</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toBeNull</span><span class="p">();</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">Things</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="nx">rootScope</span><span class="p">.</span><span class="nx">$digest</span><span class="p">();</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">Things</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">describe</span><span class="p">(</span><span class="s2">"MyFunction"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="s2">"should return true by default"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">MyFunction</span><span class="p">()).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="nx">it</span><span class="p">(</span><span class="s2">"should return false when other thing is changed is false"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">controller</span><span class="p">.</span><span class="nx">OtherThing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">MyFunction</span><span class="p">()).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">});</span></code></pre></figure>
+
+<p>This is a very cut down example, but it demonstrates a few things. First, mocking a service is quite easy with Jasmine. Then, using <code class="highlighter-rouge">$injector</code> to get
+other dependencies you don’t need for testing if you’re too lazy to mock them (I know I was!).</p>
+
+<p>Looking back, passing null into dependencies that aren’t used in the tests would be much easier… I’ll see about that later!</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/04/26/testing-angularjs-controllers/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/04/26/testing-angularjs-controllers/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

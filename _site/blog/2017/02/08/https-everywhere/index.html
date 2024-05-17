@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: HTTPS everywhere!</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>HTTPS everywhere!</h2>
+            <p class="date">Posted on 2017-02-08</p>
+            
+
+            <p>What’s this!? Your trafic to this site is now encrypted!</p>
+
+<!-- more -->
+
+<p>No one can know your dirty secrets except me!</p>
+
+<p>Because of <a href="https://letsencrypt.org/">Let’s Encrypt</a> and <a href="http://apisnetworks.com/r?cdroulers">Hostineer</a>,
+I now have a fully secure HTTPS website! And it was super easy.</p>
+
+<p><a href="https://letsencrypt.org/about/">Let’s Encrypt</a> is a recently created Open Certificate Authority
+that allows any individual to create and install SSL/TLS certificates on their websites. The certificates
+are valid for 90 days and there is even <a href="https://certbot.eff.org/">a tool (CertBot)</a> that can automate renewal
+regularly. Therfore, there is now no reason NOT to serve your website over HTTPS!</p>
+
+<p><a href="http://apisnetworks.com/r?cdroulers">Hostineer</a> is my host since 2008 and has been great. It’s not very
+expensive, it has a lot of features (SSH access, sub-domains, etc.) with the basic package and the service
+is fast. The infrastructure is regularly updated as well. They also have a feature to enable SSL via
+Let’s Encrypt automatically via a GUI instead of manually setting up CertBot. Easy and efficient.</p>
+
+<p>That means that <a href="https://apps.cdroulers.com/block-fly">Block Fly</a> will soon be fully offline with
+service workers since they require HTTPS. Yayyyyyyy!</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2017/02/08/https-everywhere/";
+    var disqus_url = 'https://cdroulers.com/blog/2017/02/08/https-everywhere/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

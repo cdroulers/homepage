@@ -1,0 +1,135 @@
+---
+---
+
+html, body {
+    font-size: 11pt;
+}
+
+a {
+    text-decoration: none;
+}
+
+a.print:after {
+    content: " (" attr(href) ") ";
+    font-size: 90%;
+    font-weight: bold;
+    border-bottom: #ccc;
+}
+
+a.print[href^="/"]:after {
+    content: " (http://cdroulers.com" attr(href) ") ";
+    font-weight: bold;
+    border-bottom: #ccc;
+}
+
+header h2, header h1 {
+    margin: 0;
+}
+
+header h2 {
+    display: none;
+}
+
+body.cv header {
+    display: none;
+}
+
+#content > div {
+    clear: both;
+}
+
+#content > a {
+    display: none;
+}
+
+#cv-tagline {
+    font-size: 125%;
+}
+
+.email {
+    float: right;
+}
+
+#cv {
+    clear: both;
+}
+
+body.cv #content > h2, body.cv .version {
+    display: none;
+}
+
+h2 {
+    margin: 5pt 0;
+    clear: both;
+}
+
+nav, footer, .version {
+    display: none;
+}
+
+p {
+    margin: 0;
+    padding: 2pt 5pt 10pt 5pt;
+    text-align: justify;
+}
+
+#cv * {
+    font-size: 10pt;
+}
+
+#cv .languages {
+    float: left;
+}
+
+#cv .languages.learning {
+    float: right;
+}
+
+#cv p {
+    padding-bottom: 0;
+}
+
+#cv h3 {
+    clear: both;
+    border-bottom: 1px solid #000;
+    margin-top: 15pt;
+    margin-bottom: 0;
+    font-size: 1.2em;
+}
+
+#cv h4 {
+    margin-top: 5pt;
+    font-size: 1em;
+    margin-bottom: 0;
+}
+
+#cv h5 {
+    font-size: .9em;
+    margin: 0;
+}
+
+div#cv ul {
+    margin: 0;
+}
+
+div#cv ul.liste-liens > li {
+    border-bottom: 1pt dotted #808080;
+}
+
+div#cv ul.liste-liens li ul {
+    padding-bottom: 5pt;
+}
+
+div#cv ul.liste-liens li ul li {
+    list-style: disc;
+}
+
+div#cv ul.passe-temps {
+    overflow: auto;
+}
+
+div#cv ul.passe-temps li {
+    float: left;
+    width: 30%;
+    padding-right: 2%;
+}

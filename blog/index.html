@@ -1,0 +1,31 @@
+---
+layout: default
+title: Blog
+bodyclass: blog-index
+atomlink: "/blog/atom.xml"
+---
+
+<h2>Blog</h2>
+
+RSS / Atom feed: <a href="atom.xml">atom.xml</a>
+
+<ul class="posts">
+  {% for post in paginator.posts %}
+    <li>
+        <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+        <p class="date">Posted on {{ post.date | date: "%Y-%m-%d" }}</p>
+        <div class="excerpt">{{ post.excerpt | strip_html }}</div>
+    </li>
+  {% endfor %}
+</ul>
+
+<!-- Pagination links -->
+<div class="pagination">
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | replace: "index.html", "" }}" class="previous">Previous</a>
+  {% endif %}
+  <span class="page_number ">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path }}" class="next">Next</a>
+  {% endif %}
+</div>

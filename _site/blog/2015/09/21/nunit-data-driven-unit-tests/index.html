@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: NUnit data-driven unit tests</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>NUnit data-driven unit tests</h2>
+            <p class="date">Posted on 2015-09-21</p>
+            
+
+            <p>Writing unit tests is fun. But sometimes, getting proper test data gets cumbersome.</p>
+
+<!-- more -->
+
+<p>Most examples of unit testing deal with a really small problem that has very few input and even less output. This
+is great for learning, obviously, but when you get in a real-world problem, it’s never that simple.</p>
+
+<p>We had to write unit tests for a rule engine that had about 15 input variables and between 5 and 10 output
+depending on the input. This test data also comes from the client because it’s about business rules and porting
+older code and manual calculations to a new system. How do we get the data from the client’s head into our code
+so we can run it through the algorithm?</p>
+
+<h3 id="excel-to-the-rescue">Excel to the rescue</h3>
+
+<p>Excel is always an obvious choice for <em>everything</em>. Everyone knows how to use it and has it installed. It’s pretty
+and you can easily build and manage data. So you create a file with headers and a few rows of data then you commit.
+Now your repo has a nice binary file that you can’t diff online (neither bitbucket or github supports it as of
+writing this post) or offline, except with special tools. And the special tools aren’t top-notch yet. Excel is out.</p>
+
+<h3 id="csv-to-the-rescue">CSV to the rescue</h3>
+
+<p>CSV is something that Excel still can’t figure out properly. If you’re lucky enough that everyone that’s going to
+touch the file runs their OS in the same locale. Otherwise, you’ll get people opening the file with the <code class="highlighter-rouge">fr-CA</code>
+locale that won’t use <code class="highlighter-rouge">,</code> as their CSV separator and Excel will happily display everything in one column. Using the
+<code class="highlighter-rouge">sep=,</code> works if everyone uses Excel but LibreOffice doesn’t support it and you get weird data.</p>
+
+<h3 id="tsv-the-final-solution">TSV the final solution</h3>
+
+<p>The best option we’ve come up with is using a <code class="highlighter-rouge">.tsv</code> file. Which isn’t a real file format, it’s simply a tab-separated
+CSV using the <code class="highlighter-rouge">.tsv</code> extension. It has a few drawbacks that were very acceptable to us.</p>
+
+<ul>
+  <li>It doesn’t have a default program, so you have to start it with the <code class="highlighter-rouge">open with</code> dialog or double-click it and let
+Windows handle it.</li>
+  <li>You can’t save formulas or formatting in the file.</li>
+</ul>
+
+<p>But opening it with Excel will work no matter the locale and LibreOffice opens up a parsing dialog with <code class="highlighter-rouge"><span class="p">{</span><span class="err">Tab</span><span class="p">}</span></code> as
+the delimiter pre-selected.</p>
+
+<p>It <a href="https://github.com/cdroulers/nunit-data-driven-tests/commit/cb5334be9d3177d84d293c6f0dc70a0ec8d43c92">diffs properly with any tool and online</a>.
+<a href="https://github.com/cdroulers/nunit-data-driven-tests/blob/master/Cdroulers.Business.Tests.Unit/Data/prime-factors.tsv">GitHub even shows the TSV file in a neat HTML table!</a>
+In our use-case it was easy for our Product Owner to open up our sample
+file and fill it up with dozens of test cases. Edge cases, large numbers, etc. When we found bugs, we would simply add
+a new line in the file. We added a new feature and simply added a new column in the TSV file. All of that shows up
+properly in a diff so it’s easy to see the data that was added along with a bug fix or a new feature.</p>
+
+<h3 id="reading-the-tsv-file">Reading the TSV file</h3>
+
+<p>NUnit is a pretty great framework. It has great stuff like <code class="highlighter-rouge">[TestCase()]</code> attributes for quickly testing the same code
+with different input and output. It also has <code class="highlighter-rouge">[TestCaseSource()]</code> which is exactly what we need for running tests
+according to our TSV file.</p>
+
+<p><code class="highlighter-rouge">[TestCaseSource("FunctionName")]</code> will, at test discovery time, execute the static method in the parameters and
+create a test for each value. The function signature must 
+<a href="https://github.com/cdroulers/nunit-data-driven-tests/blob/master/Cdroulers.Business.Tests.Unit/GivenPrimeFactorCalculator.cs#L46">look like the following</a>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">private</span> <span class="k">static</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">&gt;</span> <span class="nf">FunctionName</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">Enumerable</span><span class="p">.</span><span class="n">Empty</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">&gt;();</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><a href="https://github.com/cdroulers/nunit-data-driven-tests/blob/master/Cdroulers.Business.Tests.Unit/GivenPrimeFactorCalculator.cs#L39">The full test method using this looks like</a>:</p>
+
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="na">[TestCaseSource("FunctionName")]</span>
+<span class="k">public</span> <span class="k">void</span> <span class="nf">TestName</span><span class="p">(</span><span class="kt">object</span> <span class="k">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">actual</span> <span class="p">=</span> <span class="c1">// Do something with value
+</span>    <span class="n">Assert</span><span class="p">.</span><span class="nf">That</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">Is</span><span class="p">.</span><span class="nf">EqualTo</span><span class="p">(</span><span class="m">3</span><span class="p">));</span> <span class="c1">// Assert whatever you want.
+</span><span class="p">}</span></code></pre></figure>
+
+<p>The static method’s return type must be IEnumerable, but the contents can be any class. Therefore in our case, I created
+a simple class that contained each input and output as properties and read them from the TSV.</p>
+
+<p>I created <a href="https://github.com/cdroulers/nunit-data-driven-tests">a full-blown sample</a> with Visual Studio 2013 available
+for free! Each commit represents a step towards the end goal with a simple domain of calculating prime factors.</p>
+
+<p>In that sample, reading the TSV is done using very simple string parsing, which is a pretty bad idea in general,
+especially with a larger sample size than 2 columns like my sample. Using a proper CSV parsing library such as
+<a href="https://github.com/JoshClose/CsvHelper">CsvHelper</a> is a much better idea. But that’s another blog post!</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/09/21/nunit-data-driven-unit-tests/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/09/21/nunit-data-driven-unit-tests/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,1077 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>Faire évoluer un logiciel existant avec le Domain-Driven Design et l'Event Sourcing</title>
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/sky.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+    integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="css/presentation.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section class="author">
+        <h2 data-markdown>Faire évoluer un logiciel existant avec le **Domain-Driven Design** et l'**Event Sourcing**
+        </h2>
+        <h3>Christian Droulers</h3>
+        <h4>Architecte Logiciel, <b>Akinox Solutions</b></h4>
+        <div class="split">
+          <ul>
+            <li><i class="fas fa-globe"></i> <a href="https://cdroulers.com/">cdroulers.com</a></li>
+            <li>
+              <img class="icon" src="https://image.flaticon.com/icons/svg/25/25231.svg">
+              <a href="https://github.com/cdroulers/">github.com/cdroulers</a>
+            </li>
+            <li>
+              <img class="icon" src="https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-icon.png">
+              <a href="https://stackoverflow.com/users/229726/christian-droulers">stackoverflow.com
+                <b>christian-droulers</b></a>
+            </li>
+            <li>
+              <img class="icon"
+                src="https://www.akinox.com/wp-content/uploads/2018/01/cropped-favicon_512x512px_8-32x32.png">
+              <a href="https://akinox.com/fr/carrieres/">akinox.com/fr/carrieres</a>
+            </li>
+          </ul>
+
+          <img class="me" src="images/christian_droulers.jpg">
+        </div>
+
+        <aside class="notes">
+          Nous faisons un logiciel de télésanté asynchrone afin de donner accès aux soins
+          spécialisés à des communautés qui en ont moins, par exemple en région.
+
+          Mon nom est assez unique à googler!
+          Anectode:
+
+          La plupart des développeurs ont eu à gérer au moins une fois dans leur carrière, un logiciel
+          qui vous amène au bord de la rage!
+
+          Une bête noire que personne dans l'équipe de veut toucher!
+
+          C'est ce qui m'est arrivé en 2016 en arrivant chez Akinox. Un projet .NET WebForms
+          avec 10 ans d'expérience des dizaines de développeurs et de consultant et donc,
+          des dizaines de façon de faire, de pratiques bizarres et de code mal écrit.
+          Parce qu'évidemment, si c'est pas le mien, c'est mal écrit!
+        </aside>
+      </section>
+
+      <section>
+        <h2>Objectifs de la présentation</h2>
+
+        <ul>
+          <li class="fragment" data-fragment-index="1">Comprendre le <b>Legacy</b></li>
+          <li class="fragment" data-fragment-index="2">Rendre la logique simple avec le <b>DDD</b></li>
+          <li class="fragment" data-fragment-index="3">Créer des points d'extension avec le <b>ES</b></li>
+          <li class="fragment" data-fragment-index="4">Remplacer les anciennes interfaces du projet existant</li>
+        </ul>
+
+        <aside class="notes" data-markdown>
+          Legacy: On va voir ce que ça mange en hiver du Legacy.
+
+          DDD: On va centraliser la logique d'affaire qui a la valeur pour l'entreprise dans du code
+          plus simple, plus facile à tester et à modifier.
+
+          ES: On va se donner les outils qu'il faut pour pouvoir faire évoluer notre application
+          pendant longtemps.
+
+          Legacy: Pour pouvoir déployer les nouvelles fonctionnalités qu'on va créer, il faut quand
+          même avoir une certaine intégration avec les interfaces du Legacy et la BD.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Interface Legacy avant</h2>
+
+        <img src="images/before.png" />
+        <img src="images/before2.png" />
+
+        <aside class="notes" data-markdown>
+          Voici un exemple de ce à quoi ça ressemblait avant.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Interface malade maintenant</h2>
+
+        <img src="images/after.png" />
+        <img src="images/after2.png" />
+
+        <aside class="notes" data-markdown>
+          Voici un exemple de ce à quoi ça ressemble maintenant.
+        </aside>
+      </section>
+
+      <section data-markdown>
+        <script type="text/template">
+            ## C'est quoi du *Legacy*
+
+            * Code peu ou pas testé <!-- .element: class="fragment" data-fragment-index="1" -->
+            * Projet mal architecturé <!-- .element: class="fragment" data-fragment-index="2" -->
+            * Peur des modifications, peur des déploiements <!-- .element: class="fragment" data-fragment-index="3" -->
+            * Ancien <!-- .element: class="fragment" data-fragment-index="4" -->
+            * Programmeur d'origine indisponible <!-- .element: class="fragment" data-fragment-index="5" -->
+          </script>
+
+        Notes:
+        Test: Indicateur principal car les autres en découle plus ou moins!
+        Architecture: Mauvaise ré-utilisation de code, copier/coller, etc.
+        Peur: Trop de travail, toujours des imprévus, on réduit les fonctionnalités
+        Ancien: Vieilles technologies, code archaïque et hétérogène
+        Programmeur: Impossible d'obtenir une explication sur certaines choses bizarres.
+      </section>
+
+      <section data-markdown>
+        ## Base de données
+
+        ![Legacy Database](images/legacy-db.png)
+
+        Notes:
+        **RAPIDE**
+
+        * Pas de FK, mauvaise normalisation
+        * Logique éparpillée entre stored proc et code
+      </section>
+
+      <section data-markdown>
+        ## Monolithique
+
+        ![Legacy Code](images/legacy-code.png)
+
+        Notes:
+        **RAPIDE**
+
+        * Couplage extrêmement élevé
+        * Code copié/collé
+
+        Un monolithe est difficile à modifier. Chaque changement peut entrainer une cascade
+        d'erreur de compilation, de tests brisés ou de bogues difficiles à attraper.
+      </section>
+
+      <section data-markdown>
+        ## Résultat
+
+        ![Legacy Code](images/spaghetti-code.jpg)
+
+        Notes:
+        Il est même difficile de commencer à le tester car il n'a pas été écrit pour et il faut
+        refactorer aggressivement, ce qui prend énormément de temps!
+      </section>
+
+      <section>
+        <h2 data-markdown>Rendre la logique simple avec le *DDD*</h2>
+
+        <img src="images/ddd.png" style="width: 60%">
+
+        <aside class="notes">
+          Ce qui m'attire vers le DDD depuis toujours, c'est le focus complet sur la logique.
+
+          Les techniques utilisées permette d'avoir du code clair et concis en réduisant le couplage
+          entre les classes. C'est donc plus facile de comprendre les bouts de code importants
+          qui ont de la valeur.
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Objectifs du *Domain-Driven Design*</h2>
+
+        <ul>
+          <li class="fragment" data-fragment-index="1">Approche développement itérative</li>
+          <li class="fragment" data-fragment-index="2">Focus sur les règles d'affaires</li>
+          <li class="fragment" data-fragment-index="3">Collaboration entre les parties avec un langage commun</li>
+          <li class="fragment" data-fragment-index="4">Crée un modèle beaucoup plus proche du domaine d'affaires</li>
+        </ul>
+
+        <aside class="notes" data-markdown>
+          Le DDD a pour objectif d'approcher le développement de façon itérative et mettre le
+          focus sur les règles d'affaires et la logique qui s'y relie.
+
+          La collaboration entre les membres techniques et les experts du domaine sont primordiales.
+
+          Rapporter toutes les connaissances du domaine d'affaire vers le modèle.
+
+          Le domaine d'affaire, c'est tous les processus et les données qui sont utilisés par les
+          personnes concernés par notre logiciel. Par exemple, en santé, c'est les données des patients,
+          les procédures médicales, la médication, la logistique des lits et chambres, etc.
+          </li>
+      </section>
+
+      <section>
+        <h2 data-markdown>Langage Commun (*Ubiquitous Language*)</h2>
+
+        <ul>
+          <li class="fragment" data-fragment-index="1">Définition des termes du domaine d'affaires</li>
+          <li class="fragment" data-fragment-index="2">Permet d'être rigoureux dans le nommage du code</li>
+          <li class="fragment" data-fragment-index="3">Simplifie la communication avec les experts du domaine</li>
+        </ul>
+
+        <aside class="notes">
+          Par exemple, dans notre logiciel, il y avait des formulaires depuis toujours. Une nouvelle
+          fonctionnalité demandée a été de créer un nouveau style d'interface pour remplir des données
+          de type "sondage". Les experts en recherche utilisait le terme "Questionnaire", alors c'est
+          maintenant le terme utilisé dans le code, et en communication.
+
+          Ça rend très explicite la différence entre les anciens formulaires et les nouveaux
+          questionnaires avec les noms seulement!
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Aggrégat (*Aggregate*)</h2>
+
+        <ul>
+          <li class="fragment" data-fragment-index="1">Représente une grappe d'objet</li>
+          <li class="fragment" data-fragment-index="2">Traité comme une seule entité consistente</li>
+          <li class="fragment" data-fragment-index="3">Modifications atomique</li>
+        </ul>
+
+        <p class="fragment" data-fragment-index="4">
+          <img src="diagrams/out/src/diagrams/patient-aggregate.svg" style="width: 60%">
+        </p>
+
+        <aside class="notes" data-markdown>
+          Représente une grappe d'objet qui est traité comme une seul entité consistente.
+
+          Chaque modification est atomique, donc l'aggrégat ne doit pas
+          se permettre de devenir invalide.
+
+          Chaque modification (via une méthode) est validé et le processus
+          est interrompu si quelque chose ne fonctionne pas.
+
+          * Exemple: Un patient, ses médicaments, ses numéros d'index et les lits auxquels il a déjà été assigné
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Racine d'Aggrégat (*Aggregate Root*)</h2>
+
+        <ul>
+          <li class="fragment" data-fragment-index="1">Objet principal</li>
+          <li class="fragment" data-fragment-index="2">Reçoit les opérations</li>
+          <li class="fragment" data-fragment-index="3">Point d'entrée unique</li>
+        </ul>
+
+        <p class="fragment" data-fragment-index="4">
+          <img src="diagrams/out/src/diagrams/patient-aggregate-with-root.svg" style="width: 60%">
+        </p>
+
+        <aside class="notes" data-markdown>
+          La racine est l'objet principal par lequel toutes les opérations sur cet aggrégat
+          devraient être faites. On obtient donc un point d'entrée unique pour toute opération.
+
+          Dans un cas comme celui-ci, le Patient est la racine. On lui prescrit les médicaments, on
+          le déplace physiquement dans l'hôpital d'un lit à l'autre.
+
+          On voit que c'est la seule classe qui a des méthodes dans l'aggrégat. C'est un peu
+          vague comme décision car ça prend de la pratique et beaucoup de compréhension du domaine,
+          ce pourquoi on va écouter les experts! On reste pragmatique et conscient qu'avec les
+          itérations, on va améliorer le code!
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Code du Patient</h2>
+
+        <pre><code data-trim data-noescape>
+<span class="fragment" data-fragment="1">public class Patient : RacineDaggregat
+{</span>
+  <span class="fragment" data-fragment="2">private readonly List&lt;Prescription> prescriptions;</span>
+
+  <span class="fragment" data-fragment="3">public ReadOnlyCollection&lt;Prescription> Prescriptions { get; }</span>
+
+  <span class="fragment" data-fragment="4">public void Prescrire(Id idMedicament, Unite quantite, Recurrence recurrence)
+  {
+    if (this.prescriptions.Any(x => x.IdMedicament == idMedicament))
+    {
+      throw new ExceptionMedicament("Médicament déjà prescrit!");
+    }</span>
+
+    <span class="fragment" data-fragment="5">this.prescriptions.Add(new Prescription(idMedicament,  quantity, recurrence));
+  }
+}</span>
+          </code></pre>
+
+        <aside class="notes" data-markdown>
+          *Présenter le code*
+
+          ReadOnlyCollection: On protège l'état de l'aggrégat le plus possible avec les fonctionnalités du language!
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Code du AggregateRoot</h2>
+
+        <pre><code data-trim data-noescape>
+<span class="fragment" data-fragment="1">public class RacineDaggregat
+{</span>
+  <span class="fragment" data-fragment="2">public Id Id { get; private set; }
+}</span>
+          </code></pre>
+
+        <aside class="notes" data-markdown>
+          *Présenter le code*
+
+          Ici, la racine d'aggrégat a juste un identifiant. Elle va servir plus avec le Event Sourcing
+          qu'on va voir plus tard.
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>*Value Object*</h2>
+
+        <ul>
+          <li class="fragment" data-fragment-index="1">Objet Immuable identifié uniquement par ses valeurs</li>
+          <li class="fragment" data-fragment-index="2">Rend explicite un concept du domain d'affaire</li>
+          <li class="fragment" data-fragment-index="3">Définit des comportements de ce concept</li>
+          <li class="fragment" data-fragment-index="4">
+            Exemples
+            <ul>
+              <li class="fragment" data-fragment-index="5">Une valeur monétaire</li>
+              <li class="fragment" data-fragment-index="6">Une plage de dates</li>
+              <li class="fragment" data-fragment-index="7">Une récurrence de médicaments</li>
+              <li class="fragment" data-fragment-index="8">Un identifiant avec un format spécifique</li>
+            </ul>
+          </li>
+        </ul>
+
+        <aside class="notes" data-markdown>
+          first point: Pas d'identifiant, absolument immuable.
+
+          format spécifique: Comme un numéro d'assurance maladie!
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>*Value Object* Argent</h2>
+
+        <pre><code data-trim data-noescape>
+<span class="fragment" data-fragment="1">public struct Argent
+{
+  public readonly decimal Valeur;
+  public readonly Devise Devise;</span>
+
+  <span class="fragment" data-fragment="2">public Argent Additioner(Argent autre)
+  {</span>
+    <span class="fragment" data-fragment="3">if (this.Devise != autre.Devise)
+    {
+      throw new ExceptionDevise(
+        "Veuillez convertir l'argent à la devise " +
+          this.Devise.ToString());
+    }</span>
+
+    <span class="fragment" data-fragment="4">return new Argent(
+      this.Valeur + other.Valeur,
+      this.Devise);
+  }
+}</span>
+          </code></pre>
+
+        <aside class="notes" data-markdown>
+          Plutôt qu'utiliser un type primitif comme `decimal`, on peut créer `Argent`.
+
+          Qui contient aussi la devise et qui empêche de faire des opérations invalides.
+
+          p.e. sur des devises incompatibles.
+
+          p.e. La classe peut s'assurer d'arrondir les valeurs sous les centièmes de dollars ou
+          arrondir les tranches de 5 sous comme ici, dépendant du domaine d'affaire.
+        </aside>
+      </section>
+
+      <section>
+        <div data-markdown>
+          ## Utilisation de la classe Argent
+        </div>
+
+        <pre><code data-trim data-noescape>
+          <span class="fragment" data-fragment="1">public static void DebiterCompte(
+            Compte compte,
+            Argent paiement,
+            IServiceDevise serviceDevise)
+          {</span>
+            <span class="fragment" data-fragment="2">try
+            {
+              compte.Balance = compte.Balance.Soustraire(paiement);
+            }</span>
+            <span class="fragment" data-fragment="3">catch (ExceptionDevise)
+            {
+              var converti = serviceDevise.Convertir(paiement, compte.Devise);
+              compte.Balance = compte.Balance.Soustraire(converti);
+            }
+          }</span>
+
+          <span class="fragment" data-fragment="4">var montant = new Argent(0.45, Devise.USD);</span>
+          <span class="fragment" data-fragment="5">DebiterCompte(compte, montant, serviceDevise);</span>
+          </code></pre>
+
+        <aside class="notes" data-markdown>
+          On voit ici l'avantage de rendre explicite des concepts comme l'argent pour avoir
+          du code plus clair et qui empêche de créer des bogues subtils.
+        </aside>
+      </section>
+
+      <section>
+        <div>
+          <h2 data-markdown>Contexte (*Bounded Context*)</h2>
+
+          <ul>
+            <li class="fragment" data-fragment="1">Domaine d'affaire large et complexe</li>
+            <li class="fragment" data-fragment="2">Plusieurs différentes groupes de données et d'interactions</li>
+            <li class="fragment" data-fragment="3">Les contextes regroupent ces détails</li>
+          </ul>
+
+          <img class="fragment" data-fragment="3" src="diagrams/out/src/diagrams/bounded-contexts.svg"
+            style="width: 80%">
+        </div>
+
+        <aside class="notes" data-markdown>
+          Puisqu'un domaine d'affaire est généralement assez complexe et inclus plusieurs groupes
+          d'utilisateurs, il est possible que les mêmes termes soient utilisés de différentes façon.
+
+          Quand on pense à tout ce qui se passe dans une urgence à l'hôpital par exemple.
+
+          À part de l'attente, on a l'accueil, le triage, la consultation avec le médecin, des
+          tests, peut-être une hospitalisation, donc des suivis réguliers, des repas, d'autres tests!
+
+          Pour éviter de tous mélanger, on définit des contextes. Ceux-ci suivent généralement
+          l'utilisation dans le monde réel.
+
+          Délimiter ainsi différents contextes permet de réduire la complexité du modèle lorsqu'on
+          travaille dessus.
+
+          On peut aussi isoler certains termes et concepts dans un seul contexte pour ne pas
+          contaminer le reste.
+
+          Les staff de maintenance n'a pas besoin de connaitre les patients qui passent
+          sur les lits pour les réparer ou déplacer, et de même, les médecins ou infirmiers
+          n'ont pas besoin de connaitre les détails de la facturation pour administrer des soins.
+
+          Les objets similaires vont utiliser les mêmes identifiants afin
+          de pouvoir relier les entités ensemble entre les contextes, comme le patient et un lit, par exemple.
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Créer des points d'extension avec le *Event Sourcing*</h2>
+
+        <img src="images/es.png" style="width: 50%">
+
+        <aside class="notes" data-markdown>
+          L'Event sourcing m'a toujours attiré par sa promesse de conserver une historique complet des
+          modifications à une entité. Mais en plus, ça crée l'architecture nécessaire pour créer
+          des points d'extensions simples dans notre code.
+        </aside>
+      </section>
+
+      <section>
+        <div>
+          <h2 data-markdown>Objectifs de l'*Event Sourcing*</h2>
+
+          <ul>
+            <li class="fragment" data-fragment="1">Chaque changement d'état est capturé dans un événement</li>
+            <li class="fragment" data-fragment="2">Les événements sont complets et ne nécessite pas de données externes
+            </li>
+            <li class="fragment" data-fragment="3">Ils sont enregistrés pour reconstruire l'état présent</li>
+            <li class="fragment" data-fragment="4">Séparer les modèles de lecture et les événements</li>
+          </ul>
+
+        </div>
+
+        <aside class="notes" data-markdown>
+          S'assurer que tous les changements à l'état de l'application sont capturés
+          dans une séquence d'événements complets qui sont enregistrés et utilisés pour reconstruire
+          l'état à tout moment désiré.
+
+          ### important
+
+          Si on compare à un logiciel régulier qui a une belle Base de données et que pour le modifier,
+          on lit l'état courant, on le modifie et on enregistre les changements, y'a une grande différence.
+
+          Avec le Event Sourcing, les événements sont la seule source de vérité. Quand on veut modifier
+          une entité, on lit les événements, on les rejoue comme s'il venait de se passer et c'est
+          ainsi qu'on obtient l'état courant. Ensuite on peut le modifier en créant de nouveaux
+          événements, et on enregistre ses nouveaux événements.
+
+          Comme les événements ne peuvent pas être "queryés" comme une BD, on crée des modèles de lecture
+          à mesure qu'on enregistre les événements. Ça peut être une BD relationel ou une cache REDIS.
+
+          Dans notre cas avec le Legacy, l'ancienne BD va devenir un modèle de lecture pour les données
+          existantes.
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Avantages de l'*Event Sourcing*</h2>
+        <ul>
+          <li class="fragment" data-fragment="1">Historique complet des changements d'état</li>
+          <li class="fragment" data-fragment="2">Requête temporelle</li>
+          <li class="fragment" data-fragment="3">Ré-éxécution d'événement erronée</li>
+        </ul>
+
+        <p class="fragment" data-fragment="4">
+          <img src="diagrams/out/src/diagrams/patient-events.svg" style="width: 90%">
+        </p>
+
+        <aside class="notes" data-markdown>
+          * Temporelle: reconstruire jusqu'à un point X
+          * Ré-éxécution: Réparer un bogue dans le code ensuite reconstruire sans erreur!
+
+          Concrètement, avec la liste des événements comme ça, on peut repasser
+          dans la liste des événements et répondre à des questions du genre "Combien
+          de fois mon patient a reçu une prescription pour un médicament X dans les derniers 3 mois
+          après avoir été diagnostiqué par Dr. X"
+
+          On est jamais pris de cours car on a conservé tous les changements depuis le début et on
+          peut les rejouer à tout moment.
+        </aside>
+      </section>
+
+      <section>
+        <div data-markdown>
+          ## Événements de Domaine (*Domain Events*)
+
+          Contiennent l'information représentant l'action complète de l'utilisateur ou du système.
+        </div>
+
+        <img src="diagrams/out/src/diagrams/domain-events.svg" style="width: 100%">
+
+        <aside class="notes" data-markdown>
+          #### Classe de base `Événement`
+
+          * Identifiant utilisateur
+          * Identifiant de l'Aggrégat
+          * Timestamp
+
+          #### Sous-classe d'événements
+          * PatientAdmis
+          * PatientFacturé
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Gestionnaire d'événements (*Event Handlers*)</h2>
+        <ul>
+          <li class="fragment" data-fragment="1">Une action désirée, un gestionnaire</li>
+          <li class="fragment" data-fragment="2">Court et simple</li>
+          <li class="fragment" data-fragment="3">Multiples destinations</li>
+        </ul>
+
+        <img class="fragment" data-fragment="4" src="diagrams/out/src/diagrams/event-handlers.svg" style="width: 80%">
+
+        <aside class="notes" data-markdown>
+          Pour chaque « Action » désirée pour un événement du domaine, on crée un gestionnaire.
+
+          Chacun éxécute une et une seule action.
+          Plus ils sont petits et courts, plus facile ils sont à tester et maintenir!
+
+          Il y en a habituellement un qui crée un modèle de lecture principal.
+
+
+          Le modèle de lecture est important car « queryer » dans un event Storage
+          n'est pas très possible ou efficace.
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>*Repository*</h2>
+        <ul>
+          <li class="fragment" data-fragment="1">Lis les aggrégats</li>
+          <li class="fragment" data-fragment="2">Enregistre les nouveaux événements</li>
+        </ul>
+
+        <aside class="notes" data-markdown>
+          Permet lire les aggrégats à partir des événements enregistrés.
+
+          Sauvegarde les événements de façon permanente ainsi que d'appeller les
+          gestionnaires d'événements.
+
+          C'est le concept qui lie le DDD et le ES. Il crée la couche de persistance des objets
+          du domaine en persistant les événements effectués sur les aggrégats et qui va appeler nos
+          soi-disants Gestionnaire d'événements.
+        </aside>
+
+        <pre class="fragment" data-fragment="3" style="margin-top: 2rem"><code data-trim data-noescape>
+public interface IRepository
+{
+  Task&lt;T&gt; LireAsync&lt;T&gt;(IdAggregat id) where T : RacineDaggregat;
+
+  Task EnregistrerAsync&lt;T&gt;(T aggregate) where T : RacineDaggregat;
+}
+          </code></pre>
+      </section>
+
+      <section>
+        <div data-markdown>
+          ## Code du patient
+        </div>
+
+        <pre><code data-trim data-noescape>
+public class Patient : RacineDaggregat
+{
+  private readonly List&lt;Prescription> prescriptions;</span>
+
+  public ReadOnlyCollection&lt;Prescription> Prescriptions;</span>
+
+
+  public void Prescrire(Id idMedicament, Unite quantite, Recurrence recurrence)
+  {
+    if (this.prescriptions.Any(x => x.IdMedicament == idMedicament))
+    {
+      throw new ExceptionMedicament("Médicament déjà prescrit!");
+    }
+
+    <span class="fragment" data-fragment="5">this.Dispatcher(new PrescriptionÉmise(idMedicament, quantite, recurrence));
+  }</span>
+  <span class="fragment" data-fragment="6">
+  public void Appliquer(PrescriptionÉmise evt)
+  {
+    this.prescriptions.Add(new Prescription(idMedicament,  quantity, recurrence));
+  }
+}</span>
+          </code></pre>
+
+        <aside class="notes" data-markdown>
+          On reprend l'exemple du code du patient pour voir comment les événements sont gérés,
+          on commence avec la même chose, mais on ajoute une petite étape.
+
+          Au lieu de modifier l'état directement, on dispatch un événement, qui sera appliqué
+          dans une nouvelle méthode. C'est cet événement, `PrescriptionÉmise` qui sera enregistré
+          par le Repository.
+        </aside>
+      </section>
+      <section>
+        <div data-markdown>
+          ## Code du AggregateRoot
+        </div>
+
+        <pre><code data-trim data-noescape>
+<span class="fragment" data-fragment="1">public class RacineDaggregat
+{
+  public Id Id { get; private set; }</span>
+
+  <span class="fragment" data-fragment="3">private readonly List&lt;Événement> evenements = new List&lt;Événement>();</span>
+
+  <span class="fragment" data-fragment="4">protected void Dispatcher(DomainEvent evt)
+  {
+    this.evenements.Add(evt);</span>
+
+    <span class="fragment" data-fragment="5">// Magie de réflection
+    this.Appliquer(evt);
+  }</span>
+
+  <span class="fragment" data-fragment="6">public void LireHistorique(IEnumerable&lt;Événement> evenements)
+  {</span>
+    <span class="fragment" data-fragment="7">foreach (var evt in evenements)
+    {
+      // Magie de réflection
+      this.Appliquer(evt);
+    }
+  }
+}</span>
+          </code></pre>
+
+        <aside class="notes" data-markdown>
+          On sépare la création de l'événement et son effet car la méthode `Appliquer`
+          va servir à reconstruire l'état plus tard.
+
+          L'aggrégat conserve une liste des événements qui lui sont appliqués.
+
+          Ça permet au repository, quand on sauvegarde, de savoir quels événements il
+          doit persister et dispatcher.
+
+          Lorsqu'on `Load` un aggrégat, on va chercher les événements dans la
+          persistence, puis on fait `LireHistorique` avec, ce qui ré-applique les
+          événements un par un!
+        </aside>
+      </section>
+
+      <section>
+        <h2>Lecture des données legacy</h2>
+
+        <img src="diagrams/out/src/diagrams/legacy-sql-map.svg" style="width: 70%">
+
+        <aside class="notes" data-markdown>
+          Vu qu'on fait évoluer un logiciel existant, on a pas le choix de supporter les données
+          existantes.
+
+          Lorsqu'on va lire un "aggrégat" dans notre solution, à la place de lire les événements
+          enregistrés dans le passé, il faut faire un mappage des données
+          legacy parce qu'on a pas d'historique. On va transformer l'état *courant* vers des événements.
+
+          Ça ne nous permet pas d'avoir un vrai historique d'avant notre ES, mais ça permet
+          de créer une couche transparente de code pour que le Repository ai l'air fonctionnel.
+
+          Pour les aggrégats qui ne proviennent pas du legacy, on peut lire les vrais événements.
+          Par exemple, les nouveaux patients pourraient être lus à partir de la persistence ES plutôt
+          que du Legacy!
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Remplacer les anciennes interfaces du projet existant</h2>
+
+        <img src="images/old-new.webp" style="width: 80%">
+
+        <aside class="notes" data-markdown>
+          Cette section présente l'expérience concrète que j'ai eu à utiliser DDD / ES pour
+          évoluer notre logiciel!
+        </aside>
+      </section>
+
+      <section>
+        <h2>Nouvelle architecture</h2>
+
+        <img src="diagrams/out/src/diagrams/new-architecture.svg" style="width: 80%">
+
+        <aside class="notes">
+        C'est beaucoup en même temps, on va passer chacune des étape en détails!
+
+        Ceci est une représentation de ce qui est arrivé au final, j'ai évidemment itéré
+        plusieurs fois et chaque logiciel est unique!
+        </aside>
+      </section>
+
+      <section>
+        <div data-markdown>
+          ## Nouvelle interface et API
+
+          * Interface Web SPA créée avec React / GraphQL / Relay
+          * API GraphQL et .NET core
+        </div>
+
+        <svg class="svg-graphic" width="1486" height="792" style="width: 80%; height: 80%">
+          <image id="image1backui" xlink:href="diagrams/out/src/diagrams/new-architecture.svg" height="100%"
+            width="100%" />
+          <rect height="100%" width="100%" fill="black" style="opacity:0.6" />
+          <g id="mask4ui" visibility="visible">
+            <defs>
+              <clipPath id="clip-ui">
+                <ellipse cx="34%" cy="18%" rx="22%" ry="11%"></ellipse>
+              </clipPath>
+            </defs>
+            <image xlink:href="diagrams/out/src/diagrams/new-architecture.svg" height="100%" width="100%"
+              clip-path="url(#clip-ui)" />
+          </g>
+        </svg>
+
+        <aside class="notes" data-markdown>
+          Pas spécifiquement rapport à la transition à DDD/ES,
+
+          Mais comme React est très modulaire, je peux facilement exporter des composantes
+          JavaScript à intégrer dans mon application Legacy! Comme c'est du Web,
+          Le JavaScript est facile à intégrer dans des vieilles pages et remplacer les
+          vieilles interface désuètes.
+
+          J'ai, par exemple, remplacé toutes les interfaces de gestion des patients dans le Legacy
+          par mes composantes modernes en React, alors tout passe par mon nouveau code à ce niveau là!
+        </aside>
+      </section>
+
+      <section>
+        <div data-markdown>
+          ## Modernité maximale
+
+          * Utilisation de DDD / ES dans l'API
+        </div>
+
+        <svg class="svg-graphic" width="1486" height="792" style="width: 80%; height: 80%">
+          <image id="image1backmodern" xlink:href="diagrams/out/src/diagrams/new-architecture.svg" height="100%"
+            width="100%" />
+          <rect height="100%" width="100%" fill="black" style="opacity:0.6" />
+          <g id="mask4modern" visibility="visible">
+            <defs>
+              <clipPath id="clip-modern">
+                <ellipse cx="34%" cy="49%" rx="17%" ry="21%"></ellipse>
+              </clipPath>
+            </defs>
+            <image xlink:href="diagrams/out/src/diagrams/new-architecture.svg" height="100%" width="100%"
+              clip-path="url(#clip-modern)" />
+          </g>
+        </svg>
+
+        <aside class="notes" data-markdown>
+          C'est ici qu'on utilise finalement le DDD et le ES via le Repository!
+
+          C'est aussi ici que les Contextes vont être utile! On peut créer des micro-services pour
+          chaque contexte ou bien simplement séparer le code dans différents projets et les exposer
+          via différents point d'entrées dans l'API.
+
+          On se retrouve avec des bouts de codes simples et qui n'interagissent pas entre eux pour
+          rien.
+        </aside>
+      </section>
+
+      <section>
+        <div data-markdown>
+          ## Création de patient dans l'API
+        </div>
+
+        <pre><code data-trim data-noescape>
+  <span class="fragment" data-fragment="1">public class AjoutPatient
+  {
+    public async Task Executer(IRepository repo, dynamic input)
+    {</span>
+      <span class="fragment" data-fragment="2">var patient = new Patient(input.prénom, input.nom);</span>
+
+      <span class="fragment" data-fragment="3">string idHopital = input.idHopital, numeroIndex = input.numeroIndex;
+      if (!string.IsNullOrWhiteSpace(idHopital) &&
+        !string.IsNullOrWhiteSpace(numeroIndex))
+      {</span>
+        <span class="fragment" data-fragment="4">var hopital = await repo.LoadAsync&lt;Hopital&gt;(new IdAggregat(idHopital));</span>
+        <span class="fragment" data-fragment="5">patient.LierHopital(hopital.Id, numeroIndex);
+      }</span>
+
+      <span class="fragment" data-fragment="6">await repo.EnregistrerAsync(patient);
+    }
+  }</span>
+          </code></pre>
+        <aside class="notes" data-markdown>
+          * Simplicité dans le code client du DDD / Repo
+
+          new Patient génère un événement dans la liste
+
+          Si on a un lien d'hôpital, on génère un deuxième événement
+
+          Ensuite le repo va persister les nouveaux événements et les dispatcher
+          au gestionnaire pertinents.
+        </aside>
+      </section>
+
+      <section>
+        <div data-markdown>
+          ## Gestionnaire d'événements vers multiples destinations
+
+          * 2 destinations principales
+          * Legacy
+          * Statistiques / Intelligence d'affaire
+        </div>
+
+        <svg class="svg-graphic" width="1486" height="792" style="width: 80%; height: 80%">
+          <image id="image1backhandlers" xlink:href="diagrams/out/src/diagrams/new-architecture.svg" height="100%"
+            width="100%" />
+          <rect height="100%" width="100%" fill="black" style="opacity:0.6" />
+          <g id="mask4handlers" visibility="visible">
+            <defs>
+              <clipPath id="clip-handlers">
+                <ellipse cx="56%" cy="75%" rx="15%" ry="27%"></ellipse>
+              </clipPath>
+              <clipPath id="clip-handlers2">
+                <ellipse cx="13%" cy="70%" rx="12%" ry="27%"></ellipse>
+              </clipPath>
+            </defs>
+            <image xlink:href="diagrams/out/src/diagrams/new-architecture.svg" height="100%" width="100%"
+              clip-path="url(#clip-handlers)" />
+            <image xlink:href="diagrams/out/src/diagrams/new-architecture.svg" height="100%" width="100%"
+              clip-path="url(#clip-handlers2)" />
+          </g>
+        </svg>
+
+        <aside class="notes" data-markdown>
+          Gestionnaire Legacy: Tiens à jour les données dans la BD Legacy pour que tout fonctionne encore.
+
+          p.e. Les données patients et les médicaments care les anciens systèmes en ont besoin.
+
+          Gestionnaire BI: Peut être où on veut selon nos besoins et facile à modifier car isolé du reste.
+
+          Gestionnaire optionnel: Intégration Offline avec BD différente.
+
+          Mentionner autres destinations telles que SMS, Courriel,
+          Intégration partenaire, Modèle de lecture en mémoire uniquement, etc.
+        </aside>
+      </section>
+
+      <section>
+        <div data-markdown>
+          ## Intégration dans le Legacy
+        </div>
+
+        <svg class="svg-graphic" width="1486" height="792" style="width: 80%; height: 80%">
+          <image id="image1backlegacy" xlink:href="diagrams/out/src/diagrams/new-architecture.svg" height="100%"
+            width="100%" />
+          <rect height="100%" width="100%" fill="black" style="opacity:0.6" />
+          <g id="mask4legacy" visibility="visible">
+            <defs>
+              <clipPath id="clip-legacy">
+                <ellipse cx="84%" cy="78%" rx="17%" ry="27%"></ellipse>
+              </clipPath>
+            </defs>
+            <image xlink:href="diagrams/out/src/diagrams/new-architecture.svg" height="100%" width="100%"
+              clip-path="url(#clip-legacy)" />
+          </g>
+        </svg>
+        <aside class="notes" data-markdown>
+          On voit qu'il y a beaucoup de flèches vers le Legacy!
+
+          Il reste une étape cruciale ici!
+
+          Il faut que les actions posées dans le Legacy qui peuvent affecter le nouveau code soit
+          répliquées!
+
+          Dans mon cas, j'ai simplement ajouter des appels REST aux endroits stratégiques du Legacy
+          vers un endpoint dans mon nouveau code qui transformait l'action en événement ES.
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Intégration avec le *legacy*</h2>
+
+        <ul>
+          <li class="fragment" data-fragment="1"><b>Tenir à jour</b> l'ancienne base de données</li>
+          <li class="fragment" data-fragment="2"><b>Remplacer</b> des vieilles interfaces par des nouvelles si possible
+          </li>
+          <li class="fragment" data-fragment="3"><b>Retourner</b> les actions pertinentes au nouveau code</li>
+        </ul>
+
+        <aside class="notes">
+          Une bonne difficulté de tout ça est que ça prend un minimum de connaissances
+          de la BD Legacy et du code Legacy pour bien gérer le tout.
+
+          Votre joie de vivre va provenir du nouveau code en DDD / ES, pas de cette intégration!
+        </aside>
+      </section>
+
+      <section>
+        <h2 data-markdown>Succès concrets</h2>
+
+        <ul>
+          <li class="fragment" data-fragment="1">Reconstruction des statistiques après bogue ou modifications</li>
+          <li class="fragment" data-fragment="2">Ajout de nouveaux gestionnaires d'événements facilement</li>
+          <li class="fragment" data-fragment="3">Audit de modification automatique</li>
+          <li class="fragment" data-fragment="3">Logique d'affaire simplifiée</li>
+          <li class="fragment" data-fragment="3">Prototype d'application Offline-first sans modifier le domaine.</li>
+        </ul>
+
+        <aside class="notes" data-markdown>
+          * Reconstruction: Peu faire un wipe de la table de stats, lancer une tâche Hangfire.
+          Arrive régulièrement que client demande nouveaux champ de stats que je peux bâtir avec mon historique.
+          * Ajout: Intégration avec un partenaire pour l'envoi de rapport à la
+          fin d'une consultation patient.
+          * Audit: Création d'une interface qui affiche tous les événements d'une entité
+          * Logique: Le domaine est facile à modifier et tester
+          * p.e. modification d'un workflow complet sans bogue car testé et simple à lire. (eConsult flex)
+          * Prototype: Ajout de gestionnaire d'événement et de modèle de lecture très facilement!
+        </aside>
+      </section>
+
+      <section>
+        <h2>Questions?</h2>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <a style="padding-top: 10rem;" href="https://akinox.com/fr/carrieres/">akinox.com/fr/carrieres</a>
+
+        <aside class="notes" data-markdown>
+          J'espère que ma présentation vous donnera le courage d'attaquer votre logiciel Legacy
+          d'une façon différente!
+
+          Le plus satisfaisant est qu'après avoir travaillé comme ceci, je peux régulièrement
+          supprimer du code Legacy car il ne sert plus du tout!
+
+          Avez-vous des questions?
+        </aside>
+      </section>
+
+      <section class="author">
+        <h2 data-markdown> Faire évoluer un logiciel existant avec le **Domain-Driven Design** et l'**Event Sourcing**
+        </h2>
+        <h3>Christian Droulers</h3>
+        <h4>Architecte Logiciel, <b>Akinox Solutions</b></h4>
+        <div class="split">
+          <ul>
+            <li><i class="fas fa-globe"></i> <a href="https://cdroulers.com/">cdroulers.com</a></li>
+            <li>
+              <img class="icon" src="https://image.flaticon.com/icons/svg/25/25231.svg">
+              <a href="https://github.com/cdroulers/">github.com/cdroulers</a>
+            </li>
+            <li>
+              <img class="icon" src="https://cdn.sstatic.net/Sites/stackoverflow/company/img/logos/so/so-icon.png">
+              <a href="https://stackoverflow.com/users/229726/christian-droulers">stackoverflow.com
+                <b>christian-droulers</b></a>
+            </li>
+            <li>
+              <img class="icon"
+                src="https://www.akinox.com/wp-content/uploads/2018/01/cropped-favicon_512x512px_8-32x32.png">
+              <a href="https://akinox.com/">akinox.com</a>
+            </li>
+          </ul>
+
+          <img class="me" src="images/christian_droulers.jpg">
+        </div>
+      </section>
+
+      <section data-markdown>
+        ### Références
+
+        ![Domain-Driven Design](images/ddd_book_eric_evans.jpg)
+        ![Domain-Driven Design](images/ddd_book_vaughn_vernon.jpg)
+        ![Domain-Driven Design](images/ddd_book_vaughn_vernon2.jpg)
+
+        Notes:
+        Trois livres intéressants à lire pour approfondir ses connaissances en DDD.
+
+        C'est un sujet très complexe
+      </section>
+    </div>
+  </div>
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+
+  <script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+      history: true,
+      width: "90%",
+      height: "98%",
+      dependencies: [
+        { src: 'plugin/markdown/marked.js' },
+        { src: 'plugin/markdown/markdown.js' },
+        { src: 'plugin/notes/notes.js', async: true },
+        {
+          src: 'plugin/highlight/highlight.js',
+          async: true,
+          callback: function () {
+            hljs.configure({
+
+            });
+            hljs.initHighlightingOnLoad();
+          }
+        },
+        {
+          src: '//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.7.0/highlightjs-line-numbers.min.js',
+          async: true,
+          callback: function () {
+            hljs.initLineNumbersOnLoad();
+          }
+        }
+      ]
+    });
+  </script>
+</body>
+
+</html>

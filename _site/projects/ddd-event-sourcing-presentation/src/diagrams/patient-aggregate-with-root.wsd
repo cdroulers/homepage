@@ -1,0 +1,40 @@
+@startuml patient-aggregate-with-root
+allow_mixing
+
+title Aggrégat Patient
+
+rectangle "Aggrégat Patient" {
+  class Patient #ff9900 {
+    +string Nom
+    +void AssignerAuLit(Id idHopital, Id idLit)
+    +void Admettre(Id idHopital)
+  }
+
+  class NumeroIndexPatient {
+      +Id IdHopital
+      +string Numero
+  }
+
+  class Lit {
+      +Id IdHopital
+      +string Numero
+      +DateTime OccupeDepuis
+      +DateTime? OccupeJusqua
+  }
+
+  class Prescription {
+      +Id IdMedicament
+      +Unite Quantite
+      +Recurrence Recurrence
+  }
+}
+
+rectangle "Code client" as Codeclient
+
+Patient "1" *-up- "*" Lit
+Patient "1" *-up- "*" NumeroIndexPatient
+Patient "1" *-up- "*" Prescription
+
+Codeclient ==> Patient
+
+@enduml

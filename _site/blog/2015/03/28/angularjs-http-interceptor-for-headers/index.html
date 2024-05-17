@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html lang="en-CA">
+    <head>
+        <title>Christian Droulers :: AngularJS HTTP Interceptor to set headers</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
+        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
+        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+
+        
+        
+        <script type="text/javascript" src="/scripts/ga.js"></script>
+    </head>
+    <body class="blog-article">
+        <header>
+            <h1>Christian Droulers</h1>
+            <h2>Agile and flexible programmer</h2>
+        </header>
+        <nav>
+            <ul>
+                <li><a href="/">Presentation</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/cv/">Curriculum Vitae</a></li>
+                <li><a href="/writings/">Writings</a></li>
+                <li><a href="/articles/">Articles</a></li>
+            </ul>
+        </nav>
+        <section id="content">
+            
+            <h2>AngularJS HTTP Interceptor to set headers</h2>
+            <p class="date">Posted on 2015-03-28</p>
+            
+
+            <p>Our new system is built in a distributed way. We have a bunch of services that have a clear responsibility and they are accessible over REST. Here’s how we handle a few 
+headers for calling them in AngularJS.</p>
+
+<!-- more -->
+
+<p>The simplest use-case for this is internationalisation. Our app will need to be available in both French and English. Therefore, we are using HTTP’s <code class="highlighter-rouge">Accept-Language</code> header.</p>
+
+<p>The REST API checks for this header and returns any localisable data in that language as well as error messages or any other resource that can be translated.</p>
+
+<p>To do this globally in our AngularJS application, we used an <a href="https://docs.angularjs.org/api/ng/service/$http#interceptors">HTTP interceptor</a>. Here’s the gist :</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">angular</span>
+    <span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"shared"</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s2">"httpRequestInterceptor"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">request</span><span class="p">:</span> <span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+                <span class="c1">// The language can be configured any other way.
+</span>
+                <span class="c1">// We'll eventually use $("html").attr("lang").
+</span>
+                <span class="nx">config</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">"Accept-Language"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"fr-CA"</span><span class="p">;</span> 
+                <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s2">"$httpProvider"</span><span class="p">,</span> <span class="p">(</span><span class="na">$httpProvider</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IHttpProvider</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">$httpProvider</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">"httpRequestInterceptor"</span><span class="p">);</span>
+    <span class="p">}])</span></code></pre></figure>
+
+<p>This is also used by our authentication library to set the <code class="highlighter-rouge">Authentication</code> header for obvious purposes.</p>
+
+<p>This means that any request made in our app via the <code class="highlighter-rouge">$http</code> provider will have those headers.</p>
+
+
+            
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_shortname = "cdroulers";
+    var disqus_identifier = "/blog/2015/03/28/angularjs-http-interceptor-for-headers/";
+    var disqus_url = 'https://cdroulers.com/blog/2015/03/28/angularjs-http-interceptor-for-headers/';
+    (function() {
+        var dsq = document.createElement('script'); dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            
+        </section>
+        
+        <footer>
+            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+        </footer>
+    </body>
+</html>
