@@ -11,20 +11,49 @@ bodyclass: cv
     <a href="mailto:christian@droulers.me" class="email">christian@droulers.me</a>
     <h3 id="cv-name">
         Christian Droulers
-        (<a href="https://www.linkedin.com/in/cdroulers">LinkedIn</a>,
-        <a href="https://careers.stackoverflow.com/cv/employer/88268">Stack Overflow Careers 2.0</a>)
+        (<a href="https://www.linkedin.com/in/cdroulers">LinkedIn</a>)
     </h3>
     <p id="cv-tagline">Software and Web developer</p>
-
     <div class="languages">
         <h4>Fluent languages</h4>
         <p>French and English</p>
     </div>
-
     <h3>Work experience</h3>
     <ul class="liste-liens">
         <li>
-            <h4>Lead Software Architect (March 2016 - ...)</h4>
+            <h4>Software Developer Team Lead (October 2023 - ...)</h4>
+            <h5><a href="http://akinox.com/">Akinox</a>. Lévis, Québec</h5>
+            <ul>
+                <li>Manage existing team through performance reviews and one on one feedback.</li>
+                <li>Maintain code quality through upfront design reviews, code reviews and story documentation.</li>
+                <li>Scrum Master responsibilities: ceremony animation, demo, client meetings.</li>
+                <li>All existing responsibilities for Software Developer below.</li>
+            </ul>
+        </li>
+        <li>
+            <h4>Software Developer (March 2020 - October 2023)</h4>
+            <h5><a href="http://akinox.com/">Akinox</a>. Lévis, Québec</h5>
+            <ul>
+                <li>Technology advisor through the expansion of the company from 7 employees to 100. Onboarding of multiple new employees and consultants.</li>
+                <li>Expand existing software to a province wide deployment while building new features for governmental client.</li>
+                <li>Investigation and enhancement related to performance issues.</li>
+                <li>Collaborate with multiple internal and external teams on software, testing and deployment issues.</li>
+                <li>Analyse and implement client needs using modern software techniques such as testing, CI and infrastructure as code.</li>
+                <li>Review code within the team, mentor junior and senior developers.</li>
+                <li>Implement tests at all layers. Unit testing, Integration testing, API testing, End-to-End testing.</li>
+                <li>Design and implement distributed messaging between multiple services.</li>
+                <li>Software Stewardship for multiple internal projects: UI Kit, Telemetry collection, Docker-compose project spanning multiple micro-services, Company wide knowledge sharing guild.</li>
+                <li>
+                    <strong>Technological environment:</strong>
+                    C# / .NET Core / VS2020+,
+                    GraphQL, TypeScript/JavaScript, React, Apollo, Jest, TestCafé,
+                    Docker, Kubernetes, ArgoCD, OpenTelemetry,
+                    OpenID Connect / OAuth.
+                </li>
+            </ul>
+        </li>
+        <li>
+            <h4>Lead Software Architect (March 2016 - March 2020)</h4>
             <h5><a href="http://akinox.com/">Akinox</a>. Lévis, Québec</h5>
             <ul>
                 <li>Explore new technologies and build new features while supporting a legacy product.</li>
@@ -89,18 +118,17 @@ bodyclass: cv
             </ul>
         </li>
     </ul>
-
     <h3>Technical skills</h3>
     <ul class="liste-liens">
         <li>
             <h4>Programming</h4>
             <p><strong>Languages:</strong> C#, TypeScript, JavaScript (NodeJS), Powershell, Java, C/C++, Python, Ruby, PHP, VB.NET, PL/SQL, T-SQL.</p>
-            <p><strong>Frameworks:</strong> WPF, WCF, WF, asp.NET MVC / WEB API, LINQ, WebPack</p>
+            <p><strong>Frameworks:</strong> React, EFCore, OpenApi, Vite, WPF, WCF, WF, asp.NET MVC / WEB API, LINQ, WebPack</p>
         </li>
         <li>
             <h4>Web technologies</h4>
             <p>
-                React, HTML5, CSS3, JavaScript, service workers, npm, jQuery, RequireJS, Backbone.js, Knockout.js, AJAX, SignalR, asp.NET, IIS6/7/8, Apache 2.0, NGINX, W3C standards, XML.
+                React, GraphQL, Apollo, Vite, HTML5, CSS3, JavaScript, service workers, npm, jQuery, RequireJS, Backbone.js, Knockout.js, AJAX, SignalR, asp.NET, IIS6/7/8, Apache 2.0, NGINX, W3C standards, XML.
             </p>
         </li>
         <li>
@@ -119,15 +147,14 @@ bodyclass: cv
             <h4>Tools</h4>
             <p>Visual Studio, Visual Studio Code, Eclipse, GIMP, Docker</p>
             <p>Git, Mercurial, Subversion</p>
-            <p>Atlassian Bamboo, Octopus Deploy, NUnit, Selenium, Specflow, PhantomJS, TestCafé</p>
+            <p>Atlassian Bamboo, Octopus Deploy, NUnit, Selenium, Specflow, PhantomJS, TestCafé, Playwright</p>
         </li>
         <li>
             <h4>Miscellaneous</h4>
-            <p>RabbitMQ, Service Bus for Windows Server, Azure</p>
-            <p>Microsoft Exchange, SharePoint, Lync, CRM 2007, Plesk Web Hosting, MailChannels Spam Filtering, Active Directory</p>
+            <p>MassTransit, RabbitMQ, Service Bus for Windows Server, Azure</p>
+            <p>Honeycomb, Microsoft Exchange, SharePoint, Lync, CRM 2007, Plesk Web Hosting, MailChannels Spam Filtering, Active Directory</p>
         </li>
     </ul>
-
     <h3>Projects</h3>
     <ul>
         <li>Puzzle game in the browser.</li>
@@ -135,15 +162,8 @@ bodyclass: cv
         <li>API Wrapper for an online donation provider.</li>
         <li><a href="/projects/" class="print">Complete list (with code!)</a></li>
     </ul>
-
     <h3>Education</h3>
     <ul>
-        <li>
-            <h4>Computer Sciences certificate (2016 - ...)</h4>
-            <ul>
-                <li><a href="http://ulaval.ca/">Université Laval</a>. Québec, Québec</li>
-             </ul>
-        </li>
         <li>
             <h4>Computer Sciences degree (2004 - 2007)</h4>
             <ul>
@@ -151,7 +171,6 @@ bodyclass: cv
              </ul>
         </li>
     </ul>
-
     <h3>Excellence rewards</h3>
     <ul class="liste-liens">
         <li>
@@ -163,7 +182,6 @@ bodyclass: cv
             <h5><a href="http://ap.csvt.qc.ca/">École secondaire Arthur-Pigeon</a>. Huntingdon, Québec</h5>
         </li>
     </ul>
-
     <h3>Hobbies and passions</h3>
     <ul class="passe-temps">
         <li>Programming</li>
@@ -171,5 +189,4 @@ bodyclass: cv
         <li>Writing</li>
         <li>Sports: Parkour, soccer, CrossFit, snowboard, biking.</li>
     </ul>
-
 </div>
