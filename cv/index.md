@@ -171,4 +171,5 @@ bodyclass: cv
         <li>Writing</li>
         <li>Sports: Parkour, soccer, CrossFit, snowboard, biking.</li>
     </ul>
+
 </div>
