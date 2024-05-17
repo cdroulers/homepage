@@ -51,7 +51,7 @@ effective and quite extendable.</p>
 
 <p>It can be added directly on a method as such:</p>
 
-<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="na">[OutputCache(ClientTimeSpan = 24 * 60 * 60, ServerTimeSpan = 24 * 60 * 60)]</span>
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="p">[</span><span class="nf">OutputCache</span><span class="p">(</span><span class="n">ClientTimeSpan</span> <span class="p">=</span> <span class="m">24</span> <span class="p">*</span> <span class="m">60</span> <span class="p">*</span> <span class="m">60</span><span class="p">,</span> <span class="n">ServerTimeSpan</span> <span class="p">=</span> <span class="m">24</span> <span class="p">*</span> <span class="m">60</span> <span class="p">*</span> <span class="m">60</span><span class="p">)]</span>
 <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">MyDTO</span><span class="p">&gt;</span> <span class="nf">GetAll</span><span class="p">()</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
@@ -64,7 +64,8 @@ effective and quite extendable.</p>
     <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">RegisterGlobalFilters</span><span class="p">(</span><span class="n">HttpFilterCollection</span> <span class="n">filters</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="c1">// Cache all requests for a few hours by default.
-</span>        <span class="n">filters</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="nf">CacheOutputAttribute</span><span class="p">()</span>
+</span>
+        <span class="n">filters</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="nf">CacheOutputAttribute</span><span class="p">()</span>
         <span class="p">{</span>
             <span class="n">ClientTimeSpan</span> <span class="p">=</span> <span class="m">24</span> <span class="p">*</span> <span class="m">60</span> <span class="p">*</span> <span class="m">60</span><span class="p">,</span> 
             <span class="n">ServerTimeSpan</span> <span class="p">=</span> <span class="m">24</span> <span class="p">*</span> <span class="m">60</span> <span class="p">*</span> <span class="m">60</span>

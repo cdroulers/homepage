@@ -6,7 +6,7 @@ encoding: utf-8
 markdown: kramdown
 highlighter: rouge
 
-gems: ["jekyll-paginate"]
+plugins: ["jekyll-paginate"]
 
 exclude: [homepage.sublime-project, homepage.sublime-workspace, projects/ddd-event-sourcing-presentation/node_modules]
 
@@ -16,4 +16,4 @@ paginate_path: "/blog/page:num/"
 excerpt_separator: <!-- more -->
 
 sass:
-    style: :compressed
+  style: :compressed

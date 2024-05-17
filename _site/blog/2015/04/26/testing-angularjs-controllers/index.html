@@ -56,14 +56,14 @@ ideally) and it can respond to events.</p>
 
 <p>Here’s a simple sample test class for a controller.</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">describe</span><span class="p">(</span><span class="s2">"app.controllers.YourController"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">describe</span><span class="p">(</span><span class="dl">"</span><span class="s2">app.controllers.YourController</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="na">scope</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IScope</span><span class="p">;</span>
     <span class="kd">var</span> <span class="na">controller</span><span class="p">:</span> <span class="nx">app</span><span class="p">.</span><span class="nx">controllers</span><span class="p">.</span><span class="nx">YourController</span><span class="p">;</span>
     <span class="kd">var</span> <span class="na">serviceMock</span><span class="p">:</span> <span class="nx">app</span><span class="p">.</span><span class="nx">services</span><span class="p">.</span><span class="nx">IService</span><span class="p">;</span>
     <span class="kd">var</span> <span class="na">rootScope</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IRootScopeService</span><span class="p">;</span>
     <span class="kd">var</span> <span class="na">q</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IQService</span><span class="p">;</span>
 
-    <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">module</span><span class="p">(</span><span class="s2">"app"</span><span class="p">));</span>
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">module</span><span class="p">(</span><span class="dl">"</span><span class="s2">app</span><span class="dl">"</span><span class="p">));</span>
 
     <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="nx">inject</span><span class="p">((</span>
@@ -74,29 +74,29 @@ ideally) and it can respond to events.</p>
             <span class="nx">rootScope</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">;</span>
             <span class="nx">q</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">;</span>
 
-            <span class="nx">serviceMock</span> <span class="o">=</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">createSpyObj</span><span class="p">(</span><span class="s2">"app.services.Service"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"GetAll"</span><span class="p">]);</span>
-            <span class="p">(</span><span class="o">&lt;</span><span class="nx">jasmine</span><span class="p">.</span><span class="nx">Spy</span><span class="o">&gt;</span><span class="nx">serviceMock</span><span class="p">.</span><span class="nx">GetAll</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">returnValue</span><span class="p">([</span><span class="s2">"thing"</span><span class="p">]);</span>
+            <span class="nx">serviceMock</span> <span class="o">=</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">createSpyObj</span><span class="p">(</span><span class="dl">"</span><span class="s2">app.services.Service</span><span class="dl">"</span><span class="p">,</span> <span class="p">[</span><span class="dl">"</span><span class="s2">GetAll</span><span class="dl">"</span><span class="p">]);</span>
+            <span class="p">(</span><span class="o">&lt;</span><span class="nx">jasmine</span><span class="p">.</span><span class="nx">Spy</span><span class="o">&gt;</span><span class="nx">serviceMock</span><span class="p">.</span><span class="nx">GetAll</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">returnValue</span><span class="p">([</span><span class="dl">"</span><span class="s2">thing</span><span class="dl">"</span><span class="p">]);</span>
 
             <span class="nx">controller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">app</span><span class="p">.</span><span class="nx">controllers</span><span class="p">.</span><span class="nx">YourController</span><span class="p">(</span>
                 <span class="nx">scope</span><span class="p">,</span>
                 <span class="nx">serviceMock</span><span class="p">,</span>
-                <span class="nx">$injector</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"otherDependency"</span><span class="p">));</span>
+                <span class="nx">$injector</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">"</span><span class="s2">otherDependency</span><span class="dl">"</span><span class="p">));</span>
         <span class="p">});</span>
     <span class="p">});</span>
 
-    <span class="nx">it</span><span class="p">(</span><span class="s2">"should load all things"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">should load all things</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">Things</span><span class="p">).</span><span class="nx">not</span><span class="p">.</span><span class="nx">toBeNull</span><span class="p">();</span>
         <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">Things</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
         <span class="nx">rootScope</span><span class="p">.</span><span class="nx">$digest</span><span class="p">();</span>
         <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">Things</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
     <span class="p">});</span>
 
-    <span class="nx">describe</span><span class="p">(</span><span class="s2">"MyFunction"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="nx">it</span><span class="p">(</span><span class="s2">"should return true by default"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">describe</span><span class="p">(</span><span class="dl">"</span><span class="s2">MyFunction</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">should return true by default</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">MyFunction</span><span class="p">()).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
         <span class="p">});</span>
 
-        <span class="nx">it</span><span class="p">(</span><span class="s2">"should return false when other thing is changed is false"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">should return false when other thing is changed is false</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
             <span class="nx">controller</span><span class="p">.</span><span class="nx">OtherThing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
             <span class="nx">expect</span><span class="p">(</span><span class="nx">controller</span><span class="p">.</span><span class="nx">MyFunction</span><span class="p">()).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
         <span class="p">});</span>

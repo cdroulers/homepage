@@ -12,7 +12,7 @@ permalink: /articles/1001-reasons-why-i-love-her/atom.xml
 		<name>Christian Droulers</name>
 	</author>
 	
-	{% for reason in site.data.reasons | limit:15 %}
+	{% for reason in site.data.reasons limit:15 %}
 	<entry>
 		<title>Reason #{{ site.data.reasons.size | minus: forloop.index0 }}</title>
 		<link href="{{ site.url }}/articles/1001-reasons-why-i-love-her/#reason-{{ site.data.reasons.size | minus: forloop.index0 }}"/>

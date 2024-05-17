@@ -57,26 +57,26 @@ installation doesn’t work. Git tries to use ssh.exe, which tries to load keys 
 
 <p>I personally modified my PowerShell profile to do the following:</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="s2">"Setting home path"</span>
-<span class="o">(</span><span class="nb">Get-PSProvider</span> <span class="s2">"FileSystem"</span><span class="o">)</span>.Home <span class="o">=</span> <span class="nv">$env</span>:USERPROFILE;
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="s2">"Setting home path"</span><span class="w">
+</span><span class="p">(</span><span class="nf">Get-PSProvider</span><span class="w"> </span><span class="s2">"FileSystem"</span><span class="p">)</span><span class="o">.</span><span class="nf">Home</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$</span><span class="nn">env</span><span class="p">:</span><span class="nv">USERPROFILE</span><span class="p">;</span><span class="w">
 
-where.exe /Q plink.exe
-<span class="k">if</span> <span class="o">(</span><span class="nv">$LASTEXITCODE</span> -eq 0<span class="o">)</span>
-<span class="o">{</span>
-    <span class="c1"># Add the path to plink and pageant to the path.
-</span>
-    <span class="s2">"Found plink.exe, setting </span><span class="sb">`</span><span class="nv">$env</span>:GIT_SSH<span class="s2">"
-    </span><span class="nv">$env</span><span class="s2">:GIT_SSH = "</span>plink.exe<span class="s2">";
-}
+</span><span class="nf">where.exe</span><span class="w"> </span><span class="nx">/Q</span><span class="w"> </span><span class="nx">plink.exe</span><span class="w">
+</span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$LASTEXITCODE</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="c"># Add the path to plink and pageant to the path.
+</span><span class="w">
+    </span><span class="s2">"Found plink.exe, setting </span><span class="se">`$</span><span class="s2">env:GIT_SSH"</span><span class="w">
+    </span><span class="nv">$</span><span class="nn">env</span><span class="p">:</span><span class="nv">GIT_SSH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"plink.exe"</span><span class="p">;</span><span class="w">
+</span><span class="p">}</span><span class="w">
 
-where.exe /Q pageant.exe
-if (</span><span class="nv">$LASTEXITCODE</span><span class="s2"> -eq 0)
-{
-    </span><span class="nv">$privateKeys</span><span class="s2"> = [string]::Join("</span> <span class="s2">", (ls ~/.ssh/*.ppk).FullName)
-    "</span>Found pageant.exe, loading default keys <span class="o">({</span>0<span class="o">})</span><span class="s2">" -f </span><span class="nv">$privateKeys</span><span class="s2">;
-    iex "</span>pageant.exe <span class="nv">$privateKeys</span><span class="s2">"
-}
-""</span></code></pre></figure>
+</span><span class="nf">where.exe</span><span class="w"> </span><span class="nx">/Q</span><span class="w"> </span><span class="nx">pageant.exe</span><span class="w">
+</span><span class="kr">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$LASTEXITCODE</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nv">$privateKeys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="kt">string</span><span class="p">]::</span><span class="nf">Join</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nf">ls</span><span class="w"> </span><span class="nx">~/.ssh/</span><span class="o">*.</span><span class="nf">ppk</span><span class="p">)</span><span class="o">.</span><span class="nf">FullName</span><span class="p">)</span><span class="w">
+    </span><span class="s2">"Found pageant.exe, loading default keys ({0})"</span><span class="w"> </span><span class="nt">-f</span><span class="w"> </span><span class="nv">$privateKeys</span><span class="p">;</span><span class="w">
+    </span><span class="nf">iex</span><span class="w"> </span><span class="s2">"pageant.exe </span><span class="nv">$privateKeys</span><span class="s2">"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="s2">""</span></code></pre></figure>
 
 <p>The first part is to make sure that <code class="highlighter-rouge">~</code> resolves to my home directory in PowerShell.</p>
 

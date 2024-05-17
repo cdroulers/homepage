@@ -54,7 +54,7 @@ according to the example, we had to declare a boolean <code class="highlighter-r
 
 <p>Modify the global scope to have a globally available function for opening date pickers:</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -66,24 +66,25 @@ according to the example, we had to declare a boolean <code class="highlighter-r
 10
 11
 12
-13</pre></td><td class="code"><pre><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"shared.ui"</span><span class="p">).</span><span class="nx">config</span><span class="p">((</span><span class="nx">$provide</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">$provide</span><span class="p">.</span><span class="nx">decorator</span><span class="p">(</span><span class="s2">"$rootScope"</span><span class="p">,(</span><span class="nx">$delegate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+13
+</pre></td><td class="code"><pre><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="dl">"</span><span class="s2">shared.ui</span><span class="dl">"</span><span class="p">).</span><span class="nx">config</span><span class="p">((</span><span class="nx">$provide</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">$provide</span><span class="p">.</span><span class="nx">decorator</span><span class="p">(</span><span class="dl">"</span><span class="s2">$rootScope</span><span class="dl">"</span><span class="p">,(</span><span class="nx">$delegate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="nx">$delegate</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">OpenDatePicker</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$event</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">$event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
             <span class="nx">$event</span><span class="p">.</span><span class="nx">stopPropagation</span><span class="p">();</span>
 
-            <span class="kd">var</span> <span class="nx">fieldName</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">$event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">parents</span><span class="p">(</span><span class="s2">".input-group:first"</span><span class="p">)</span>
-                <span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">":input[datepicker-options]"</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">"name"</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">[</span><span class="s2">"datePickerOpenedFor"</span> <span class="o">+</span> <span class="nx">fieldName</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">fieldName</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">$event</span><span class="p">.</span><span class="nx">target</span><span class="p">).</span><span class="nx">parents</span><span class="p">(</span><span class="dl">"</span><span class="s2">.input-group:first</span><span class="dl">"</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="dl">"</span><span class="s2">:input[datepicker-options]</span><span class="dl">"</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">[</span><span class="dl">"</span><span class="s2">datePickerOpenedFor</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">fieldName</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
         <span class="p">};</span>
         <span class="k">return</span> <span class="nx">$delegate</span><span class="p">;</span>
     <span class="p">});</span>
-<span class="p">})</span><span class="w">
-</span></pre></td></tr></tbody></table></code></pre></figure>
+<span class="p">})</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>And then, when creating the datepicker, this method can be used automatically:</p>
 
-<figure class="highlight"><pre><code class="language-html" data-lang="html"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -98,7 +99,8 @@ according to the example, we had to declare a boolean <code class="highlighter-r
 13
 14
 15
-16</pre></td><td class="code"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"input-group has-addon"</span><span class="nt">&gt;</span>
+16
+</pre></td><td class="code"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"input-group has-addon"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;input</span> 
         <span class="na">class=</span><span class="s">"form-control"</span> 
         <span class="na">datepicker-options=</span><span class="s">"{ }"</span> 
@@ -113,8 +115,8 @@ according to the example, we had to declare a boolean <code class="highlighter-r
             <span class="nt">&lt;i</span> <span class="na">class=</span><span class="s">"glyphicon glyphicon-calendar"</span><span class="nt">&gt;&lt;/i&gt;</span>
         <span class="nt">&lt;/button&gt;</span>
     <span class="nt">&lt;/span&gt;</span>
-<span class="nt">&lt;/div&gt;</span><span class="w">
-</span></pre></td></tr></tbody></table></code></pre></figure>
+<span class="nt">&lt;/div&gt;</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <p>As you can see, the <code class="highlighter-rouge">OpenDatePicker</code> function is available on every scope. It basically just looks for the input’s name to modify the <code class="highlighter-rouge">datePickerOpenedFor{name}</code> boolean property.</p>
 

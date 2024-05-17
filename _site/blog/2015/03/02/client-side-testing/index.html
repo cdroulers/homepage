@@ -47,29 +47,29 @@
 
 <p>Here is what it looks like in general.</p>
 
-<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">describe</span><span class="p">(</span><span class="s2">"The Dealer controllers"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">describe</span><span class="p">(</span><span class="dl">"</span><span class="s2">The Dealer controllers</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
 
     <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="c1">// Global set up
 </span>
     <span class="p">});</span>
 
-    <span class="nx">describe</span><span class="p">(</span><span class="s2">"(ListController)"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">describe</span><span class="p">(</span><span class="dl">"</span><span class="s2">(ListController)</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
 
-        <span class="nx">it</span><span class="p">(</span><span class="s2">"should call the api service to retrieve all dealers"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">should call the api service to retrieve all dealers</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
             <span class="c1">// The code for the test.
 </span>
         <span class="p">});</span>
     <span class="p">});</span>
 
-    <span class="nx">describe</span><span class="p">(</span><span class="s2">"(DetailController)"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">describe</span><span class="p">(</span><span class="dl">"</span><span class="s2">(DetailController)</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
 
         <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
             <span class="c1">// Set up for the following tests only.
 </span>
         <span class="p">});</span>
 
-        <span class="nx">it</span><span class="p">(</span><span class="s2">"should call the api service to retrieve the specified dealer"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">should call the api service to retrieve the specified dealer</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
             <span class="c1">// A test!
 </span>
         <span class="p">});</span>
@@ -83,9 +83,8 @@
 
 <p>The harder parts was getting ReSharper to pick up on all the references and include them in the test page it creates for Jasmine. Using the following:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/// &lt;reference path="../../models/Dealer.ts" /&gt;
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/// &lt;reference path="../../models/Dealer.ts" /&gt;
+</code></pre></div></div>
 
 <p>in each file that referenced others helped build a tree of dependencies and generate the proper page. For Chutzpah, the test runner we use on our build
 server, it was a bit easier since we can simply enumerate the files one after the other.</p>

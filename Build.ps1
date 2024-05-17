@@ -1,0 +1,1 @@
+docker run --rm --volume="$($PSScriptRoot):/srv/jekyll" -it jekyll/jekyll:3 jekyll build

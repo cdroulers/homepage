@@ -65,17 +65,17 @@ automatically ignoring functions of the class. Then, there are three options:</p
 
 <p>Option 2 is where the magic happens for Properties. Say you have a property like this one:</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">class</span> <span class="nx">Test</span> <span class="p">{</span>
-    <span class="kr">private</span> <span class="nx">_name</span><span class="err">:</span> <span class="nx">string</span><span class="p">;</span>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">class</span> <span class="nx">Test</span> <span class="p">{</span>
+    <span class="kr">private</span> <span class="nx">_name</span><span class="p">:</span> <span class="nx">string</span><span class="p">;</span>
 
-    <span class="kr">public</span> <span class="nx">get</span> <span class="nx">Name</span><span class="p">()</span><span class="err">:</span> <span class="nx">string</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Accessed Name"</span><span class="p">);</span>
+    <span class="kr">public</span> <span class="kd">get</span> <span class="nx">Name</span><span class="p">():</span> <span class="nx">string</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Accessed Name</span><span class="dl">"</span><span class="p">);</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_name</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="kr">public</span> <span class="nx">set</span> <span class="nx">Name</span><span class="p">(</span><span class="nx">value</span><span class="err">:</span> <span class="nx">string</span><span class="p">)</span><span class="err">:</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="kr">public</span> <span class="kd">set</span> <span class="nx">Name</span><span class="p">(</span><span class="nx">value</span><span class="p">:</span> <span class="nx">string</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">"You done messed up!"</span><span class="p">);</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">"</span><span class="s2">You done messed up!</span><span class="dl">"</span><span class="p">);</span>
         <span class="p">}</span>
 
         <span class="k">this</span><span class="p">.</span><span class="nx">_name</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
@@ -87,7 +87,7 @@ you pass the following:</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
     <span class="nl">PropertyNames</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"Name"</span><span class="err">:</span> <span class="s2">"_name"</span>
+        <span class="dl">"</span><span class="s2">Name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">_name</span><span class="dl">"</span>
     <span class="p">}</span>
 <span class="p">}</span></code></pre></figure>
 

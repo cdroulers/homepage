@@ -53,16 +53,16 @@ the current date.</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="nb">window</span><span class="p">.</span><span class="nx">getCurrentDate</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="s2">"2015-03-19"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="dl">"</span><span class="s2">2015-03-19</span><span class="dl">"</span><span class="p">);</span>
     <span class="p">};</span>
 <span class="p">});</span></code></pre></figure>
 
 <p>With that, our current date is always what we want in tests. We’ve also used it in our Selenium tests to ensure our UI thinks it’s the date we want.</p>
 
 <figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="p">((</span><span class="n">IJavaScriptExecutor</span><span class="p">)</span><span class="n">SeleniumDriver</span><span class="p">).</span><span class="nf">ExecuteScript</span><span class="p">(</span>
-    <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="err">@</span><span class="s">"app.GetCurrentDate = function() {{
-</span>        <span class="k">return</span> <span class="k">new</span> <span class="nf">Date</span><span class="p">(</span><span class="k">new</span> <span class="nf">Date</span><span class="p">(</span><span class="err">'</span><span class="p">{</span><span class="m">0</span><span class="p">}</span><span class="err">'</span><span class="p">).</span><span class="nf">setMinutes</span><span class="p">(</span><span class="k">new</span> <span class="nf">Date</span><span class="p">().</span><span class="nf">getTimezoneOffset</span><span class="p">()</span> <span class="p">+</span> <span class="m">60</span><span class="p">));</span>
-    <span class="p">}}</span><span class="err">"</span><span class="p">,</span> <span class="n">p0</span><span class="p">));</span></code></pre></figure>
+    <span class="kt">string</span><span class="p">.</span><span class="nf">Format</span><span class="p">(</span><span class="s">@"app.GetCurrentDate = function() {{
+        return new Date(new Date('{0}').setMinutes(new Date().getTimezoneOffset() + 60));
+    }}"</span><span class="p">,</span> <span class="n">p0</span><span class="p">));</span></code></pre></figure>
 
 <p>It requires making changes to an existing app if you are already using <code class="highlighter-rouge">new Date()</code> everywhere. It’s a small cost to pay for testability!</p>
 

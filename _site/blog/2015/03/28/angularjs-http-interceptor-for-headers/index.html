@@ -51,21 +51,21 @@ headers for calling them in AngularJS.</p>
 <p>To do this globally in our AngularJS application, we used an <a href="https://docs.angularjs.org/api/ng/service/$http#interceptors">HTTP interceptor</a>. Here’s the gist :</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">angular</span>
-    <span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"shared"</span><span class="p">,</span> <span class="p">[])</span>
-    <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s2">"httpRequestInterceptor"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="dl">"</span><span class="s2">shared</span><span class="dl">"</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="dl">"</span><span class="s2">httpRequestInterceptor</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="na">request</span><span class="p">:</span> <span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
                 <span class="c1">// The language can be configured any other way.
 </span>
                 <span class="c1">// We'll eventually use $("html").attr("lang").
 </span>
-                <span class="nx">config</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">"Accept-Language"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"fr-CA"</span><span class="p">;</span> 
+                <span class="nx">config</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="dl">"</span><span class="s2">Accept-Language</span><span class="dl">"</span><span class="p">]</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">fr-CA</span><span class="dl">"</span><span class="p">;</span> 
                 <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">};</span>
     <span class="p">})</span>
-    <span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s2">"$httpProvider"</span><span class="p">,</span> <span class="p">(</span><span class="na">$httpProvider</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IHttpProvider</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="nx">$httpProvider</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">"httpRequestInterceptor"</span><span class="p">);</span>
+    <span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="dl">"</span><span class="s2">$httpProvider</span><span class="dl">"</span><span class="p">,</span> <span class="p">(</span><span class="na">$httpProvider</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IHttpProvider</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">$httpProvider</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">"</span><span class="s2">httpRequestInterceptor</span><span class="dl">"</span><span class="p">);</span>
     <span class="p">}])</span></code></pre></figure>
 
 <p>This is also used by our authentication library to set the <code class="highlighter-rouge">Authentication</code> header for obvious purposes.</p>

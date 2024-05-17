@@ -49,14 +49,14 @@
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">module</span> <span class="nx">app</span><span class="p">.</span><span class="nx">controllers</span> <span class="p">{</span>
 
-    <span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ISomeScope</span> <span class="p">{</span>
+    <span class="k">export</span> <span class="kr">interface</span> <span class="nx">ISomeScope</span> <span class="p">{</span>
         <span class="nl">Customer</span><span class="p">:</span> <span class="nx">models</span><span class="p">.</span><span class="nx">Customer</span><span class="p">;</span>
         <span class="nl">Provinces</span><span class="p">:</span> <span class="nx">shared</span><span class="p">.</span><span class="nx">models</span><span class="p">.</span><span class="nx">Province</span><span class="p">[];</span>
     <span class="p">}</span>
     
-    <span class="kr">export</span> <span class="kd">function</span> <span class="nx">consumer</span><span class="p">(</span><span class="nx">$scope</span><span class="err">:</span> <span class="nx">ISomeScope</span><span class="p">,</span>
-        <span class="nx">$routeParams</span><span class="err">:</span> <span class="nx">IIdNumberRouteParams</span><span class="p">,</span>
-        <span class="nx">provincesService</span><span class="err">:</span> <span class="nx">shared</span><span class="p">.</span><span class="nx">services</span><span class="p">.</span><span class="nx">IProvincesApiService</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">export</span> <span class="kd">function</span> <span class="nx">consumer</span><span class="p">(</span><span class="nx">$scope</span><span class="p">:</span> <span class="nx">ISomeScope</span><span class="p">,</span>
+        <span class="nx">$routeParams</span><span class="p">:</span> <span class="nx">IIdNumberRouteParams</span><span class="p">,</span>
+        <span class="nx">provincesService</span><span class="p">:</span> <span class="nx">shared</span><span class="p">.</span><span class="nx">services</span><span class="p">.</span><span class="nx">IProvincesApiService</span><span class="p">)</span> <span class="p">{</span>
 
         <span class="nx">$scope</span><span class="p">.</span><span class="nx">Provinces</span> <span class="o">=</span> <span class="p">[];</span>
 
@@ -73,20 +73,20 @@
 <span class="p">}</span>
 
 <span class="nx">angular</span>
-    <span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">"app"</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="dl">"</span><span class="s2">app</span><span class="dl">"</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">controller</span><span class="p">(</span>
-        <span class="s2">"app.controllers.customer"</span><span class="p">,</span> 
-        <span class="p">[</span><span class="s2">"$scope"</span><span class="p">,</span> <span class="s2">"$routeParams"</span><span class="p">,</span> <span class="s2">"shared.services.IProvincesApiService"</span><span class="p">])</span>
+        <span class="dl">"</span><span class="s2">app.controllers.customer</span><span class="dl">"</span><span class="p">,</span> 
+        <span class="p">[</span><span class="dl">"</span><span class="s2">$scope</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">$routeParams</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">shared.services.IProvincesApiService</span><span class="dl">"</span><span class="p">])</span>
     <span class="p">.</span><span class="nx">directive</span><span class="p">(</span>
-        <span class="s2">"customerEditor"</span><span class="p">,</span> 
+        <span class="dl">"</span><span class="s2">customerEditor</span><span class="dl">"</span><span class="p">,</span> 
         <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
             <span class="k">return</span> <span class="p">{</span>
                 <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="na">Customer</span><span class="p">:</span> <span class="s2">"=customer"</span>
+                    <span class="na">Customer</span><span class="p">:</span> <span class="dl">"</span><span class="s2">=customer</span><span class="dl">"</span>
                 <span class="p">},</span>
-                <span class="na">templateUrl</span><span class="p">:</span> <span class="s2">"app/customers/customer-editor.html"</span><span class="p">,</span>
+                <span class="na">templateUrl</span><span class="p">:</span> <span class="dl">"</span><span class="s2">app/customers/customer-editor.html</span><span class="dl">"</span><span class="p">,</span>
                 <span class="na">replace</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="na">controller</span><span class="p">:</span> <span class="s2">"app.controllers.customer"</span>
+                <span class="na">controller</span><span class="p">:</span> <span class="dl">"</span><span class="s2">app.controllers.customer</span><span class="dl">"</span>
             <span class="p">};</span>
         <span class="p">});</span></code></pre></figure>
 

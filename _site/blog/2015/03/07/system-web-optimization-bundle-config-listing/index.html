@@ -86,15 +86,21 @@ A few minutes later, the build was broken because Chutzpah.json wasn’t updated
 <figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">BundleHelper</span>
 <span class="p">{</span>
     <span class="c1">/// &lt;summary&gt;
-</span>    <span class="c1">/// Gets the files from a list of bundle names.
-</span>    <span class="c1">/// &lt;/summary&gt;
-</span>    <span class="c1">/// &lt;param name="root"&gt;The root folder of your web application.&lt;/param&gt;
-</span>    <span class="c1">/// &lt;param name="bundleNames"&gt;The bundle names you want to get files from.&lt;/param&gt;
-</span>    <span class="k">public</span> <span class="k">static</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="nf">GetFiles</span><span class="p">(</span><span class="kt">string</span> <span class="n">root</span><span class="p">,</span> <span class="k">params</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">bundleNames</span><span class="p">)</span>
+</span>
+    <span class="c1">/// Gets the files from a list of bundle names.
+</span>
+    <span class="c1">/// &lt;/summary&gt;
+</span>
+    <span class="c1">/// &lt;param name="root"&gt;The root folder of your web application.&lt;/param&gt;
+</span>
+    <span class="c1">/// &lt;param name="bundleNames"&gt;The bundle names you want to get files from.&lt;/param&gt;
+</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="nf">GetFiles</span><span class="p">(</span><span class="kt">string</span> <span class="n">root</span><span class="p">,</span> <span class="k">params</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">bundleNames</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="kt">var</span> <span class="n">coll</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BundleCollection</span><span class="p">();</span>
         <span class="c1">// BundleConfig should be your web application's BundleConfig.cs file.
-</span>        <span class="n">BundleConfig</span><span class="p">.</span><span class="nf">RegisterBundles</span><span class="p">(</span><span class="n">coll</span><span class="p">);</span>
+</span>
+        <span class="n">BundleConfig</span><span class="p">.</span><span class="nf">RegisterBundles</span><span class="p">(</span><span class="n">coll</span><span class="p">);</span>
         <span class="n">BundleTable</span><span class="p">.</span><span class="n">VirtualPathProvider</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">FileVirtualPathProvider</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
         <span class="kt">var</span> <span class="n">resolver</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BundleResolver</span><span class="p">(</span><span class="n">coll</span><span class="p">,</span> <span class="k">new</span> <span class="nf">SuperFakeHttpContext</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">));</span>
 

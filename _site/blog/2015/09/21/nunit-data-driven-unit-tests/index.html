@@ -76,7 +76,7 @@ Windows handle it.</li>
   <li>You can’t save formulas or formatting in the file.</li>
 </ul>
 
-<p>But opening it with Excel will work no matter the locale and LibreOffice opens up a parsing dialog with <code class="highlighter-rouge"><span class="p">{</span><span class="err">Tab</span><span class="p">}</span></code> as
+<p>But opening it with Excel will work no matter the locale and LibreOffice opens up a parsing dialog with <code class="highlighter-rouge">{Tab}</code> as
 the delimiter pre-selected.</p>
 
 <p>It <a href="https://github.com/cdroulers/nunit-data-driven-tests/commit/cb5334be9d3177d84d293c6f0dc70a0ec8d43c92">diffs properly with any tool and online</a>.
@@ -103,12 +103,14 @@ create a test for each value. The function signature must
 
 <p><a href="https://github.com/cdroulers/nunit-data-driven-tests/blob/master/Cdroulers.Business.Tests.Unit/GivenPrimeFactorCalculator.cs#L39">The full test method using this looks like</a>:</p>
 
-<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="na">[TestCaseSource("FunctionName")]</span>
+<figure class="highlight"><pre><code class="language-csharp" data-lang="csharp"><span class="p">[</span><span class="nf">TestCaseSource</span><span class="p">(</span><span class="s">"FunctionName"</span><span class="p">)]</span>
 <span class="k">public</span> <span class="k">void</span> <span class="nf">TestName</span><span class="p">(</span><span class="kt">object</span> <span class="k">value</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">var</span> <span class="n">actual</span> <span class="p">=</span> <span class="c1">// Do something with value
-</span>    <span class="n">Assert</span><span class="p">.</span><span class="nf">That</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">Is</span><span class="p">.</span><span class="nf">EqualTo</span><span class="p">(</span><span class="m">3</span><span class="p">));</span> <span class="c1">// Assert whatever you want.
-</span><span class="p">}</span></code></pre></figure>
+</span>
+    <span class="n">Assert</span><span class="p">.</span><span class="nf">That</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">Is</span><span class="p">.</span><span class="nf">EqualTo</span><span class="p">(</span><span class="m">3</span><span class="p">));</span> <span class="c1">// Assert whatever you want.
+</span>
+<span class="p">}</span></code></pre></figure>
 
 <p>The static method’s return type must be IEnumerable, but the contents can be any class. Therefore in our case, I created
 a simple class that contained each input and output as properties and read them from the TSV.</p>

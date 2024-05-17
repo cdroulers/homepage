@@ -48,15 +48,15 @@ I added them and fixed them and obviously, since I had no tests, regressions app
 
 <p>Here are the basics.</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">describe</span><span class="p">(</span><span class="s2">"shared.ui.directives.numeric"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">describe</span><span class="p">(</span><span class="dl">"</span><span class="s2">shared.ui.directives.numeric</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="na">element</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IAugmentedJQuery</span><span class="p">,</span>
         <span class="na">scope</span><span class="p">:</span> <span class="nx">tests</span><span class="p">.</span><span class="nx">shared</span><span class="p">.</span><span class="nx">ui</span><span class="p">.</span><span class="nx">directives</span><span class="p">.</span><span class="nx">INumericTestScope</span><span class="p">,</span>
         <span class="na">timeout</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">ITimeoutService</span><span class="p">;</span>
 
     <span class="c1">// Load required modules
 </span>
-    <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">module</span><span class="p">(</span><span class="s2">"shared"</span><span class="p">));</span>
-    <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">module</span><span class="p">(</span><span class="s2">"shared.ui"</span><span class="p">));</span>
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">module</span><span class="p">(</span><span class="dl">"</span><span class="s2">shared</span><span class="dl">"</span><span class="p">));</span>
+    <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">module</span><span class="p">(</span><span class="dl">"</span><span class="s2">shared.ui</span><span class="dl">"</span><span class="p">));</span>
 
     <span class="nx">beforeEach</span><span class="p">(</span><span class="nx">inject</span><span class="p">((</span><span class="na">$rootScope</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IRootScopeService</span><span class="p">,</span> 
         <span class="na">$compile</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">ICompileService</span><span class="p">,</span> 
@@ -66,9 +66,9 @@ I added them and fixed them and obviously, since I had no tests, regressions app
 
             <span class="c1">// Generate the HTML that we would typically use for this directive
 </span>
-            <span class="kd">var</span> <span class="nx">html</span> <span class="o">=</span> <span class="s2">"&lt;input type=\"text\" ng-model=\"Price\" "</span> <span class="o">+</span> 
-                <span class="s2">"numeric=\"{ filter: 'currency', decimals: 2 }\" "</span> <span class="o">+</span> 
-                <span class="s2">"min=\"MinValue\" max=\"MaxValue\"&gt;"</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">html</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">&lt;input type=</span><span class="se">\"</span><span class="s2">text</span><span class="se">\"</span><span class="s2"> ng-model=</span><span class="se">\"</span><span class="s2">Price</span><span class="se">\"</span><span class="s2"> </span><span class="dl">"</span> <span class="o">+</span> 
+                <span class="dl">"</span><span class="s2">numeric=</span><span class="se">\"</span><span class="s2">{ filter: 'currency', decimals: 2 }</span><span class="se">\"</span><span class="s2"> </span><span class="dl">"</span> <span class="o">+</span> 
+                <span class="dl">"</span><span class="s2">min=</span><span class="se">\"</span><span class="s2">MinValue</span><span class="se">\"</span><span class="s2"> max=</span><span class="se">\"</span><span class="s2">MaxValue</span><span class="se">\"</span><span class="s2">&gt;</span><span class="dl">"</span><span class="p">;</span>
             <span class="c1">// Set the scope values to sane defaults for testing.
 </span>
             <span class="nx">scope</span><span class="p">.</span><span class="nx">Price</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
@@ -97,23 +97,23 @@ I added them and fixed them and obviously, since I had no tests, regressions app
         <span class="nx">element</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
     <span class="p">});</span>
     
-    <span class="nx">it</span><span class="p">(</span><span class="s2">"should mark as invalid for min and valid when min changes"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">"</span><span class="s2">should mark as invalid for min and valid when min changes</span><span class="dl">"</span><span class="p">,()</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="nx">scope</span><span class="p">.</span><span class="nx">MinValue</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
         <span class="nx">scope</span><span class="p">.</span><span class="nx">$digest</span><span class="p">();</span>
 
         <span class="nx">element</span>
             <span class="c1">// Enters the value in the input field
 </span>
-            <span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="dl">"</span><span class="s2">0</span><span class="dl">"</span><span class="p">)</span>
             <span class="c1">// Forces Angular to realize the value has changed
 </span>
-            <span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s2">"input"</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="dl">"</span><span class="s2">input</span><span class="dl">"</span><span class="p">)</span>
             <span class="c1">// Force the blur event, which does the formatting.
 </span>
             <span class="c1">// Not necessary for this specific test, but I added it as an example
 </span>
             <span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
-        <span class="kd">var</span> <span class="nx">hasInvalidValidation</span> <span class="o">=</span> <span class="nx">element</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span><span class="s2">"ng-invalid-min"</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">hasInvalidValidation</span> <span class="o">=</span> <span class="nx">element</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span><span class="dl">"</span><span class="s2">ng-invalid-min</span><span class="dl">"</span><span class="p">);</span>
         <span class="nx">expect</span><span class="p">(</span><span class="nx">hasInvalidValidation</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
 
         <span class="nx">scope</span><span class="p">.</span><span class="nx">MinValue</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -125,7 +125,7 @@ I added them and fixed them and obviously, since I had no tests, regressions app
         <span class="c1">// adds the flush method.
 </span>
         <span class="nx">timeout</span><span class="p">.</span><span class="nx">flush</span><span class="p">();</span>
-        <span class="nx">hasInvalidValidation</span> <span class="o">=</span> <span class="nx">element</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span><span class="s2">"ng-invalid-min"</span><span class="p">);</span>
+        <span class="nx">hasInvalidValidation</span> <span class="o">=</span> <span class="nx">element</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span><span class="dl">"</span><span class="s2">ng-invalid-min</span><span class="dl">"</span><span class="p">);</span>
         <span class="nx">expect</span><span class="p">(</span><span class="nx">hasInvalidValidation</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
     <span class="p">});</span>
 <span class="p">});</span></code></pre></figure>

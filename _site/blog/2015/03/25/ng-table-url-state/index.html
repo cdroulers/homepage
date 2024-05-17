@@ -52,7 +52,7 @@ and you’ve lost your place! You’re back on the first page with default sorti
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">firstLoad</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
 <span class="nx">$scope</span><span class="p">.</span><span class="nx">DealerListParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ngTableParams</span><span class="p">(</span>
-    <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span> <span class="na">page</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">count</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="na">sorting</span><span class="p">:</span> <span class="p">{</span> <span class="na">Id</span><span class="p">:</span> <span class="s2">"asc"</span> <span class="p">}</span> <span class="p">},</span> <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">()),</span>
+    <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span> <span class="na">page</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">count</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="na">sorting</span><span class="p">:</span> <span class="p">{</span> <span class="na">Id</span><span class="p">:</span> <span class="dl">"</span><span class="s2">asc</span><span class="dl">"</span> <span class="p">}</span> <span class="p">},</span> <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">()),</span>
     <span class="p">{</span>
         <span class="na">total</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="na">counts</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
@@ -70,9 +70,8 @@ and you’ve lost your place! You’re back on the first page with default sorti
 <p>We use <code class="highlighter-rouge">angular.extend</code> to pass defaults OR load data from the URL with <code class="highlighter-rouge">$location.search()</code>. In the <code class="highlighter-rouge">getData</code> function, we make sure we don’t change the URL on the first page
 load. But if we change the sorting or grouping or page or page count, the page’s URL will change to something like</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>?page=1&amp;count=25&amp;sorting%5BName%5D=asc
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>?page=1&amp;count=25&amp;sorting%5BName%5D=asc
+</code></pre></div></div>
 
 <p>Now if you click another link and leave the page, when you hit back, the URL will contain this information and the <code class="highlighter-rouge">angular.extend</code> will take these values and pass them on to <code class="highlighter-rouge">getData</code>.</p>
 
@@ -82,15 +81,15 @@ and could call more AJAX than needed.</p>
 <p>So we extend the <code class="highlighter-rouge">$location</code> object with a new method:</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span>
-    <span class="s2">"$location"</span><span class="p">,</span> 
-    <span class="s2">"$route"</span><span class="p">,</span> 
-    <span class="s2">"$rootScope"</span><span class="p">,</span> 
-    <span class="p">(</span><span class="nx">$location</span><span class="err">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">ILocationService</span><span class="p">,</span> 
-     <span class="nx">$route</span><span class="err">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">route</span><span class="p">.</span><span class="nx">IRouteService</span><span class="p">,</span> 
-     <span class="nx">$rootScope</span><span class="err">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IRootScopeService</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">$location</span><span class="dl">"</span><span class="p">,</span> 
+    <span class="dl">"</span><span class="s2">$route</span><span class="dl">"</span><span class="p">,</span> 
+    <span class="dl">"</span><span class="s2">$rootScope</span><span class="dl">"</span><span class="p">,</span> 
+    <span class="p">(</span><span class="nx">$location</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">ILocationService</span><span class="p">,</span> 
+     <span class="nx">$route</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">route</span><span class="p">.</span><span class="nx">IRouteService</span><span class="p">,</span> 
+     <span class="nx">$rootScope</span><span class="p">:</span> <span class="nx">ng</span><span class="p">.</span><span class="nx">IRootScopeService</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="p">(</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="nx">$location</span><span class="p">).</span><span class="nx">searchReplace</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">lastRoute</span> <span class="o">=</span> <span class="nx">$route</span><span class="p">.</span><span class="nx">current</span><span class="p">;</span>
-            <span class="kd">var</span> <span class="nx">un</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="s2">"$locationChangeSuccess"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">un</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="dl">"</span><span class="s2">$locationChangeSuccess</span><span class="dl">"</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
                 <span class="nx">$route</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">lastRoute</span><span class="p">;</span>
                 <span class="nx">un</span><span class="p">();</span>
             <span class="p">});</span>
@@ -105,7 +104,7 @@ haven’t gotten around to optimising that yet.</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">firstLoad</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
 <span class="nx">$scope</span><span class="p">.</span><span class="nx">DealerListParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ngTableParams</span><span class="p">(</span>
-    <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span> <span class="na">page</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">count</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="na">sorting</span><span class="p">:</span> <span class="p">{</span> <span class="na">Id</span><span class="p">:</span> <span class="s2">"asc"</span> <span class="p">}</span> <span class="p">},</span> <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">()),</span>
+    <span class="nx">angular</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span> <span class="na">page</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">count</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="na">sorting</span><span class="p">:</span> <span class="p">{</span> <span class="na">Id</span><span class="p">:</span> <span class="dl">"</span><span class="s2">asc</span><span class="dl">"</span> <span class="p">}</span> <span class="p">},</span> <span class="nx">$location</span><span class="p">.</span><span class="nx">search</span><span class="p">()),</span>
     <span class="p">{</span>
         <span class="na">total</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="na">counts</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
@@ -123,15 +122,15 @@ haven’t gotten around to optimising that yet.</p>
 <p>Extension code:</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span>
-    <span class="s2">"$location"</span><span class="p">,</span> 
-    <span class="s2">"$route"</span><span class="p">,</span> 
-    <span class="s2">"$rootScope"</span><span class="p">,</span> 
+    <span class="dl">"</span><span class="s2">$location</span><span class="dl">"</span><span class="p">,</span> 
+    <span class="dl">"</span><span class="s2">$route</span><span class="dl">"</span><span class="p">,</span> 
+    <span class="dl">"</span><span class="s2">$rootScope</span><span class="dl">"</span><span class="p">,</span> 
     <span class="kd">function</span> <span class="p">(</span><span class="nx">$location</span><span class="p">,</span> 
      <span class="nx">$route</span><span class="p">,</span> 
      <span class="nx">$rootScope</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">$location</span><span class="p">.</span><span class="nx">searchReplace</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">lastRoute</span> <span class="o">=</span> <span class="nx">$route</span><span class="p">.</span><span class="nx">current</span><span class="p">;</span>
-            <span class="kd">var</span> <span class="nx">un</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="s2">"$locationChangeSuccess"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">un</span> <span class="o">=</span> <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="dl">"</span><span class="s2">$locationChangeSuccess</span><span class="dl">"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
                 <span class="nx">$route</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">lastRoute</span><span class="p">;</span>
                 <span class="nx">un</span><span class="p">();</span>
             <span class="p">});</span>
