@@ -1,3 +1,4 @@
 .hg
 .jekyll-metadata
 _site/*.ps1
+_site/*.md

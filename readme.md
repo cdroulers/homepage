@@ -1,9 +1,15 @@
-# Commands #
+# Commands
 
-## Serve ##
+Build with jekyll docker container
 
-    jekyll serve -w
+## Build
 
-## Build ##
+    ./Build.ps1 -Watch
 
-    jekyll build
+`-Watch` auto-regenerates on changes.
+
+## Serve
+
+    npx serve ./_site
+
+Starts a server on `http://localhost:3000/`
