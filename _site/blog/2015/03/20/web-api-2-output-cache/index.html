@@ -1,45 +1,52 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en-CA">
-    <head>
-        <title>Christian Droulers :: Web API 2 output caching</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MSYC2QYFPL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
-        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
-        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
-        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
-        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
-        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
-        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
-        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+      gtag("config", "G-MSYC2QYFPL");
+    </script>
+    <title>Christian Droulers :: Web API 2 output caching</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width" />
 
-        
-        
-        <script type="text/javascript" src="/scripts/ga.js"></script>
-    </head>
-    <body class="blog-article">
-        <header>
-            <h1>Christian Droulers</h1>
-            <h2>Agile and flexible programmer</h2>
-        </header>
-        <nav>
-            <ul>
-                <li><a href="/">Presentation</a></li>
-                <li><a href="/blog/">Blog</a></li>
-                <li><a href="/projects/">Projects</a></li>
-                <li><a href="/cv/">Curriculum Vitae</a></li>
-                <li><a href="/writings/">Writings</a></li>
-                <li><a href="/articles/">Articles</a></li>
-            </ul>
-        </nav>
-        <section id="content">
-            
-            <h2>Web API 2 output caching</h2>
-            <p class="date">Posted on 2015-03-20</p>
-            
+    <link rel="stylesheet" href="/assets/css/main.css" media="screen" />
+    <link rel="stylesheet" href="/assets/css/syntax.css" media="screen" />
+    <link rel="stylesheet" href="/assets/css/main.print.css" media="print" />
+    <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+    <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+    <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+    <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+    <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
 
-            <p>When building REST APIs, a time comes when you want to cache data. You get more users or your app gets slower because of data accumulation.</p>
+    
+  </head>
+  <body class="blog-article">
+    <header>
+      <h1>Christian Droulers</h1>
+      <h2>Agile and flexible programmer</h2>
+    </header>
+    <nav>
+      <ul>
+        <li><a href="/">Presentation</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">Curriculum Vitae</a></li>
+        <li><a href="/writings/">Writings</a></li>
+        <li><a href="/articles/">Articles</a></li>
+      </ul>
+    </nav>
+    <section id="content">
+      
+      <h2>Web API 2 output caching</h2>
+      <p class="date">Posted on 2015-03-20</p>
+       <p>When building REST APIs, a time comes when you want to cache data. You get more users or your app gets slower because of data accumulation.</p>
 
 <!-- more -->
 
@@ -82,10 +89,7 @@ create the key using the <code class="highlighter-rouge">Authorization</code> He
 
 <p>So far, it doesn’t output the <code class="highlighter-rouge">Expires</code> header, but it doesn’t seem necessary for the moment. I’ll have to read more about HTTP caching to make sure I understand
 and then contribute to the project!</p>
-
-
-            
-            <div id="disqus_thread"></div>
+  <div id="disqus_thread"></div>
 <script>
     var disqus_shortname = "cdroulers";
     var disqus_identifier = "/blog/2015/03/20/web-api-2-output-cache/";
@@ -97,12 +101,12 @@ and then contribute to the project!</p>
     })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-            
-        </section>
-        
-        <footer>
-            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
-        </footer>
-    </body>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a> 
+    </section>
+
+    <footer>
+      © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 |
+      <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+    </footer>
+  </body>
 </html>

@@ -1,45 +1,52 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en-CA">
-    <head>
-        <title>Christian Droulers :: AngularJS Unit Testing a Directive</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MSYC2QYFPL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-        <link rel="stylesheet" href="/assets/css/main.css" media="screen">
-        <link rel="stylesheet" href="/assets/css/syntax.css" media="screen">
-        <link rel="stylesheet" href="/assets/css/main.print.css" media="print">
-        <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
-        <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
-        <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
-        <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
-        <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
+      gtag("config", "G-MSYC2QYFPL");
+    </script>
+    <title>Christian Droulers :: AngularJS Unit Testing a Directive</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width" />
 
-        
-        
-        <script type="text/javascript" src="/scripts/ga.js"></script>
-    </head>
-    <body class="blog-article">
-        <header>
-            <h1>Christian Droulers</h1>
-            <h2>Agile and flexible programmer</h2>
-        </header>
-        <nav>
-            <ul>
-                <li><a href="/">Presentation</a></li>
-                <li><a href="/blog/">Blog</a></li>
-                <li><a href="/projects/">Projects</a></li>
-                <li><a href="/cv/">Curriculum Vitae</a></li>
-                <li><a href="/writings/">Writings</a></li>
-                <li><a href="/articles/">Articles</a></li>
-            </ul>
-        </nav>
-        <section id="content">
-            
-            <h2>AngularJS Unit Testing a Directive</h2>
-            <p class="date">Posted on 2015-03-31</p>
-            
+    <link rel="stylesheet" href="/assets/css/main.css" media="screen" />
+    <link rel="stylesheet" href="/assets/css/syntax.css" media="screen" />
+    <link rel="stylesheet" href="/assets/css/main.print.css" media="print" />
+    <link rel="openid.server" href="https://www.google.com/accounts/o8/ud" />
+    <link rel="openid.delegate" href="https://plus.google.com/102046524498192574412" />
+    <link rel="openid2.local_id" href="https://plus.google.com/102046524498192574412" />
+    <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud" />
+    <meta http-equiv="X-XRDS-Location" content="https://www.google.com/accounts/o8/id" />
 
-            <p>Writing an AngularJS directive is all fun and games until you start fixing bugs. Then regression appear and you look like an idiot.</p>
+    
+  </head>
+  <body class="blog-article">
+    <header>
+      <h1>Christian Droulers</h1>
+      <h2>Agile and flexible programmer</h2>
+    </header>
+    <nav>
+      <ul>
+        <li><a href="/">Presentation</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">Curriculum Vitae</a></li>
+        <li><a href="/writings/">Writings</a></li>
+        <li><a href="/articles/">Articles</a></li>
+      </ul>
+    </nav>
+    <section id="content">
+      
+      <h2>AngularJS Unit Testing a Directive</h2>
+      <p class="date">Posted on 2015-03-31</p>
+       <p>Writing an AngularJS directive is all fun and games until you start fixing bugs. Then regression appear and you look like an idiot.</p>
 
 <!-- more -->
 
@@ -133,10 +140,7 @@ I added them and fixed them and obviously, since I had no tests, regressions app
 <p>Carefully read the comments in the above code for specific tips and tricks on how to test it.</p>
 
 <p>I now have a basic set up to test this directive, I can easily TDD the hell out of it for new features or bug reports!</p>
-
-
-            
-            <div id="disqus_thread"></div>
+  <div id="disqus_thread"></div>
 <script>
     var disqus_shortname = "cdroulers";
     var disqus_identifier = "/blog/2015/03/31/angularjs-unit-testing-directive/";
@@ -148,12 +152,12 @@ I added them and fixed them and obviously, since I had no tests, regressions app
     })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-            
-        </section>
-        
-        <footer>
-            © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 | <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
-        </footer>
-    </body>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a> 
+    </section>
+
+    <footer>
+      © <a href="mailto:webmaster@cdroulers.com">Christian Droulers</a> 2014 |
+      <a href="https://bitbucket.org/cdroulers/homepage">Source</a>
+    </footer>
+  </body>
 </html>
