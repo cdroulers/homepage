@@ -166,17 +166,6 @@ bodyclass: cv
              </ul>
         </li>
     </ul>
-    <h3>Excellence rewards</h3>
-    <ul class="liste-liens">
-        <li>
-            <h4>Best of second and third year of Computer Sciences (June 2007)</h4>
-            <h5><a href="http://cvm.qc.ca/">Cégep du Vieux Montréal</a>. Montréal, Québec</h5>
-        </li>
-        <li>
-            <h4><a href="http://www.gg.ca/document.aspx?id=187&lan=eng">Governor General's Award</a> for best 11<sup>th</sup> grade student (June 2004)</h4>
-            <h5><a href="http://ap.csvt.qc.ca/">École secondaire Arthur-Pigeon</a>. Huntingdon, Québec</h5>
-        </li>
-    </ul>
     <h3>Hobbies and passions</h3>
     <ul class="passe-temps">
         <li>Programming</li>
