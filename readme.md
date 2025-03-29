@@ -2,14 +2,16 @@
 
 Build with jekyll docker container
 
-## Build
+## Develop
 
     ./Build.ps1 -Watch
 
 `-Watch` auto-regenerates on changes.
 
-## Serve
+It serves on `http://localhost:4000/`.
 
-    npx serve ./_site
+## Build for deployment
 
-Starts a server on `http://localhost:3000/`
+    ./Build.ps1
+
+Builds into `_site` to publish with `./Update-Homepage.ps1`.

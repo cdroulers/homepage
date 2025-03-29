@@ -11,9 +11,9 @@ bodyclass: cv
     <a href="mailto:christian@droulers.me" class="email">christian@droulers.me</a>
     <h3 id="cv-name">
         Christian Droulers
-        (<a href="https://www.linkedin.com/in/cdroulers">LinkedIn</a>,
-        <a href="https://github.com/cdroulers">GitHub</a>,
-        <a href="https://bitbucket.org/cdroulers">BitBucket</a>)
+        (<a href="https://www.linkedin.com/in/cdroulers" class="print">LinkedIn</a>,
+        <a href="https://github.com/cdroulers" class="print">GitHub</a>,
+        <a href="https://bitbucket.org/cdroulers" class="print">BitBucket</a>)
     </h3>
     <p id="cv-tagline">Software and Web developer</p>
     <div class="languages">
@@ -23,8 +23,22 @@ bodyclass: cv
     <h3>Work experience</h3>
     <ul class="liste-liens">
         <li>
-            <h4>Software Developer Team Lead (October 2023 - ...)</h4>
-            <h5><a href="http://akinox.com/">Akinox</a>. Lévis, Québec</h5>
+            <h4>Senior Software Developer (November 2024 - ...)</h4>
+            <h5><a href="https://coveo.com/" class="print">Coveo</a>. Québec, Québec</h5>
+            <ul>
+                <li>Develop, test, maintain and support Web Crawling code as well as frontend code.</li>
+                <li>Participate in multi team initiatives to enhance code quality and performance.</li>
+                <li>Suggest new ways of testing for higher code quality and higher confidence in test code.</li>
+                <li>
+                    <strong>Technological environment:</strong>
+                    C# / .NET Core / VS2022+,
+                    GraphQL, TypeScript/JavaScript, React, Jest, Playwright.
+                </li> 
+            </ul>
+        </li>
+        <li>
+            <h4>Software Developer Team Lead (October 2023 - November 2024)</h4>
+            <h5><a href="https://akinox.com/" class="print">Akinox</a>. Lévis, Québec</h5>
             <ul>
                 <li>Manage existing team through performance reviews and one on one feedback.</li>
                 <li>Maintain code quality through upfront design reviews, code reviews and story documentation.</li>
@@ -34,7 +48,7 @@ bodyclass: cv
         </li>
         <li>
             <h4>Lead Software Architect and Software Developer (March 2016 - October 2023)</h4>
-            <h5><a href="http://akinox.com/">Akinox</a>. Lévis, Québec</h5>
+            <h5><a href="https://akinox.com/" class="print">Akinox</a>. Lévis, Québec</h5>
             <ul>
                 <li>Technology advisor through the expansion of the company from 7 employees to 100. Onboarding of multiple new employees and consultants.</li>
                 <li>Expand existing software to a province wide deployment while building new features for governmental client.</li>
@@ -60,7 +74,7 @@ bodyclass: cv
         </li>
         <li>
             <h4>Software Developer (May 2014 - March 2016)</h4>
-            <h5><a href="http://www.vooban.com/">Vooban</a>. Québec, Québec</h5>
+            <h5><a href="https://www.vooban.com/" class="print">Vooban</a>. Québec, Québec</h5>
             <ul>
                 <li>Analyze, develop and maintain a client's multiple products.</li>
                 <li>Enhance code quality with constant refactoring and unit testing.</li>
@@ -71,7 +85,7 @@ bodyclass: cv
         </li>
         <li>
             <h4>Software Architect (August 2013 - March 2014)</h4>
-            <h5><a href="http://sherweb.com/">SherWeb</a>. Sherbrooke, Québec</h5>
+            <h5><a href="https://sherweb.com/" class="print">SherWeb</a>. Sherbrooke, Québec</h5>
             <ul>
                 <li>Establish global architecture throughout all software. Establish specific software architecture.</li>
                 <li>Mentoring and coaching of developers and teams with new and old technologies.</li>
@@ -81,7 +95,7 @@ bodyclass: cv
         </li>
         <li>
             <h4>Analyst-Programmer (June 2012 - July 2013)</h4>
-            <h5><a href="http://sherweb.com/">SherWeb</a>. Sherbrooke, Québec</h5>
+            <h5><a href="https://sherweb.com/" class="print">SherWeb</a>. Sherbrooke, Québec</h5>
             <ul>
                 <li>Analyse and develop a distributed control panel to manage multiple hosting sites, multiple versions of Exchange and other services.</li>
                 <li><strong>Technological environment:</strong> Windows 7, Server 2008 R2, Microsoft Visual Studio 2010/2012, TFS 2012, C#, asp.NET 4, RabbitMQ, PowerShell, CSS3, HTML5, TypeScript.</li>
@@ -89,14 +103,14 @@ bodyclass: cv
         </li>
         <li>
             <h4>Web developer, Analyst-Programmer, cofounder (June 2011 - June 2012)</h4>
-            <h5><a href="http://invup.com/">Invup</a>. Boston, Massachussets</h5>
+            <h5><a href="https://invup.com/" class="print">Invup</a>. Boston, Massachussets</h5>
             <ul>
                 <li>Analyse, develop and support <a href="/projects/invup/" class="print">a complete product</a> to manage philanthropic involvement of organizations.</li>
             </ul>
         </li>
         <li>
             <h4>Web developer, Analys-Programmer (April 2008 - June 2011)</h4>
-            <h5><a href="http://sherweb.com/">SherWeb</a>. Sherbrooke, Québec</h5>
+            <h5><a href="https://sherweb.com/" class="print">SherWeb</a>. Sherbrooke, Québec</h5>
             <ul>
                 <li>Analyse and develop a <a href="/projects/sherweb-control-panel/" class="print">control panel</a> for Exchange, SharePoint and Web hosting services.</li>
                 <li><strong>Technological environment:</strong> Windows 7, Vista, XP, Server 2003/2008 R2, Microsoft Visual Studio 2005/2008/2010, asp.NET, C#, asp.NET MVC1, 2 and 3, PowerShell, CSS, XHTML, JavaScript, Subversion, CentOS.</li>
@@ -104,13 +118,7 @@ bodyclass: cv
         </li>
         <li>
             <h4>Web developer (june 2007, work from home from September 2007 to April 2008)</h4>
-            <h5><a href="http://crifpe.ca/">CRIFPE</a>, <a href="http://umontreal.ca/">Université de Montréal</a>. Montréal, Québec</h5>
-            <ul>
-                <li>Complete redesign of <a href="http://crifpe.ca/">a website</a> with HTML, PHP, Javascript and MySQL.</li>
-                <li>Develop security layer for <a href="http://observatoiretic.org/">an international research website</a> with Ruby on Rails and MySQL.</li>
-                <li>Gather specifications and plan projects according to education and research specialists.</li>
-                <li><strong>Technological environment:</strong> Mac OSX, Eclipse SDK 3.3, PHP4 et 5, Ruby on Rails 1.2 et 2.0, CSS, XHTML, Javascript.</li>
-            </ul>
+            <h5><a href="https://crifpe.ca/" class="print">CRIFPE</a>, <a href="https://umontreal.ca/">Université de Montréal</a>. Montréal, Québec</h5>
         </li>
     </ul>
     <h3>Technical skills</h3>
@@ -140,20 +148,19 @@ bodyclass: cv
         </li>
         <li>
             <h4>Tools</h4>
-            <p>Visual Studio, Visual Studio Code, Eclipse, GIMP, Docker</p>
+            <p>Visual Studio, Rider, Visual Studio Code, Docker</p>
             <p>Git, Mercurial, Subversion</p>
-            <p>Atlassian Bamboo, Octopus Deploy, NUnit, Selenium, Specflow, PhantomJS, TestCafé, Playwright</p>
+            <p>CI/CD, NUnit, xUnit, Selenium, Specflow, Testcafé, Playwright</p>
         </li>
         <li>
             <h4>Miscellaneous</h4>
-            <p>MassTransit, RabbitMQ, Service Bus for Windows Server, Azure</p>
-            <p>Honeycomb, Microsoft Exchange, SharePoint, Lync, CRM 2007, Plesk Web Hosting, MailChannels Spam Filtering, Active Directory</p>
+            <p>MassTransit, RabbitMQ, Service Bus for Windows Server, Azure, AWS</p>
+            <p>OpenTelemetry, Elastic Search, Honeycomb, Microsoft Exchange, Active Directory</p>
         </li>
     </ul>
     <h3>Projects</h3>
     <ul>
         <li>Puzzle game in the browser.</li>
-        <li>PowerShell modules to add tooling inside Visual Studio.</li>
         <li>API Wrapper for an online donation provider.</li>
         <li><a href="/projects/" class="print">Complete list (with code!)</a></li>
     </ul>
@@ -162,15 +169,14 @@ bodyclass: cv
         <li>
             <h4>Computer Sciences degree (2004 - 2007)</h4>
             <ul>
-                <li><a href="http://cvm.qc.ca/">Cégep du Vieux Montréal</a>. Montréal, Québec</li>
+                <li><a href="https://cvm.qc.ca/" class="print">Cégep du Vieux Montréal</a>. Montréal, Québec</li>
              </ul>
         </li>
     </ul>
     <h3>Hobbies and passions</h3>
     <ul class="passe-temps">
-        <li>Programming</li>
-        <li>Web development</li>
-        <li>Writing</li>
+        <li>Offroad motorcycling</li>
+        <li>Reading</li>
         <li>Sports: Parkour, soccer, CrossFit, snowboard, biking.</li>
     </ul>
 </div>
