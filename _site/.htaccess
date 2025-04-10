@@ -12,7 +12,6 @@ RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
 RewriteRule ^writings/([-_a-z0-9]+)/page-([0-9]+)$ /writings/$1/page-$2/ [R=301]
-RewriteRule ^writings/([-_a-z0-9]+)/page-([0-9]+)/$ /writings/$1/page-$2.html
 
 RewriteRule ^ecritures/(.*)$ /writings/$1 [R=301]
 RewriteRule ^projets/(.*)$ /projects/$1 [R=301]
